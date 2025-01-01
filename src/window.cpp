@@ -1,16 +1,6 @@
-#include <windows.h>
 #include "include/window.h"
 
-struct Window {
-  HWND handle;
-  bool is_running;
-  HDC backbuffer_dc;
-  BITMAPINFO backbuffer_info;
-  HBITMAP backbuffer_bitmap;
-  u32 *backbuffer_pixels;
-};
-
-static Window g_window = {};
+static Window *g_window;
 
 static void
 crash(char *err) {
@@ -19,37 +9,38 @@ crash(char *err) {
 }
 
 static LRESULT
-window_procedure(HWND window, UINT msg, WPARAM wparam, LPARAM lparam) {
+window_procedure(HWND window_handle, UINT msg, WPARAM wparam, LPARAM lparam) {
   LRESULT result = 0;
   switch (msg) {
   case WM_DESTROY:
   case WM_QUIT:
-    g_window.is_running = false;
+    g_window->is_running = false;
     break;
   case WM_PAINT:
   {
     PAINTSTRUCT ps;
-    HDC hdc = BeginPaint(window, &ps);
+    HDC hdc = BeginPaint(window_handle, &ps);
     BitBlt(
       hdc,
       ps.rcPaint.left, ps.rcPaint.top,
       ps.rcPaint.right - ps.rcPaint.left,
       ps.rcPaint.bottom - ps.rcPaint.top,
-      g_window.backbuffer_dc,
+      g_window->backbuffer.hdc,
       0, 0,
       SRCCOPY
     );
-    EndPaint(window, &ps);
+    EndPaint(window_handle, &ps);
   } break;
   default:
-    result = DefWindowProcA(window, msg, wparam, lparam);
+    result = DefWindowProcA(window_handle, msg, wparam, lparam);
     break;
   }
   return result;
 }
 
 void
-make_window(void) {
+make_window(Window *window) {
+  g_window = window;
   /* create window */
   WNDCLASSA window_class = {};
   window_class.style = CS_HREDRAW|CS_VREDRAW;
@@ -70,7 +61,7 @@ make_window(void) {
     window_x = (screen_w / 2) - (WINDOW_W / 2);
     window_y = (screen_h / 2) - (WINDOW_H / 2);
   }
-  g_window.handle = CreateWindowA(
+  g_window->handle = CreateWindowA(
     window_class.lpszClassName,
     WINDOW_NAME,
     window_style,
@@ -83,35 +74,33 @@ make_window(void) {
     window_class.hInstance,
     0
   );
-  if (!g_window.handle) crash("CreateWindowA failed.");
-  ShowWindow(g_window.handle, SW_SHOW);
-  g_window.is_running = true;
+  if (!g_window->handle) crash("CreateWindowA failed.");
+  ShowWindow(g_window->handle, SW_SHOW);
+  g_window->is_running = true;
   /* create backbuffer */
-  g_window.backbuffer_dc = CreateCompatibleDC(0);
-  g_window.backbuffer_info.bmiHeader.biSize = sizeof (BITMAPINFOHEADER);
-  g_window.backbuffer_info.bmiHeader.biWidth = WINDOW_W;
-  g_window.backbuffer_info.bmiHeader.biHeight = -WINDOW_H;
-  g_window.backbuffer_info.bmiHeader.biPlanes = 1;
-  g_window.backbuffer_info.bmiHeader.biBitCount = 32;
-  g_window.backbuffer_info.bmiHeader.biCompression = BI_RGB;
-  g_window.backbuffer_bitmap = CreateDIBSection(
-    g_window.backbuffer_dc,
-    &g_window.backbuffer_info,
+  g_window->backbuffer.hdc = CreateCompatibleDC(0);
+  g_window->backbuffer.info.bmiHeader.biSize = sizeof (BITMAPINFOHEADER);
+  g_window->backbuffer.info.bmiHeader.biWidth = WINDOW_W;
+  g_window->backbuffer.info.bmiHeader.biHeight = -WINDOW_H;
+  g_window->backbuffer.info.bmiHeader.biPlanes = 1;
+  g_window->backbuffer.info.bmiHeader.biBitCount = 32;
+  g_window->backbuffer.info.bmiHeader.biCompression = BI_RGB;
+  g_window->backbuffer.bitmap = CreateDIBSection(
+    g_window->backbuffer.hdc,
+    &g_window->backbuffer.info,
     DIB_RGB_COLORS,
-    (void **)&g_window.backbuffer_pixels,
+    (void **)&g_window->backbuffer.pixels,
     0,
     0
   );
-  if (!g_window.backbuffer_bitmap || !g_window.backbuffer_pixels) crash("CreateDIBSection failed.");
-  SelectObject(g_window.backbuffer_dc, g_window.backbuffer_bitmap);
+  if (!g_window->backbuffer.bitmap || !g_window->backbuffer.pixels) crash("CreateDIBSection failed.");
+  SelectObject(g_window->backbuffer.hdc, g_window->backbuffer.bitmap);
 }
-
-bool window_is_running(void) { return g_window.is_running; }
 
 void
 frame_begin(void) {
   MSG msg;
-  if (!InvalidateRect(g_window.handle, 0, false)) crash("InvalidateRect failed.");
+  if (!InvalidateRect(g_window->handle, 0, false)) crash("InvalidateRect failed.");
   while (PeekMessageA(&msg, 0, 0, 0, PM_REMOVE)) {
     TranslateMessage(&msg);
     DispatchMessage(&msg);
@@ -120,5 +109,5 @@ frame_begin(void) {
 
 void
 frame_end(void) {
-  for (u32 i = 0; i < WINDOW_W * WINDOW_H; i++) g_window.backbuffer_pixels[i] = 0xcc3333;
+  //for (u32 i = 0; i < WINDOW_W * WINDOW_H; i++) g_window->backbuffer.pixels[i] = 0xcc3333;
 }

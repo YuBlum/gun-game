@@ -1,7 +1,7 @@
 @echo off
 
 set OUT=game
-set SRCS=..\src\main.cpp ..\src\window.cpp
+set SRCS=..\src\main.cpp ..\src\window.cpp ..\src\renderer.cpp
 set LIBS=Kernel32.lib User32.lib Gdi32.lib
 
 pushd bin
