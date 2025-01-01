@@ -1,7 +1,14 @@
-#include <stdio.h>
+#include <windows.h>
+#include "include/window.h"
 
-int
+extern "C" int _fltused;
+
+void __stdcall
 main(void) {
-  printf("Hello, World!\n");
-  return 0;
+  make_window();
+  while (window_is_running()) {
+    frame_begin();
+    frame_end();
+  }
+  ExitProcess(0);
 }
