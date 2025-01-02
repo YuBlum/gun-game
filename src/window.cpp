@@ -1,6 +1,9 @@
 #include "include/window.h"
+#include "include/renderer.h"
 
 static Window *g_window;
+static f32 g_frequency;
+static LARGE_INTEGER g_last_time;
 
 static void
 crash(char *err) {
@@ -95,19 +98,31 @@ make_window(Window *window) {
   );
   if (!g_window->backbuffer.bitmap || !g_window->backbuffer.pixels) crash("CreateDIBSection failed.");
   SelectObject(g_window->backbuffer.hdc, g_window->backbuffer.bitmap);
+  /* timing */
+  LARGE_INTEGER frequency;
+  QueryPerformanceFrequency(&frequency);
+  g_frequency = f32(frequency.QuadPart);
+  QueryPerformanceCounter(&g_last_time);
 }
 
-void
+f32
 frame_begin(void) {
+  /* timing */
+  LARGE_INTEGER current_time;
+  QueryPerformanceCounter(&current_time);
+  f32 dt = f32(current_time.QuadPart - g_last_time.QuadPart) / g_frequency;
+  QueryPerformanceCounter(&g_last_time);
+  /* dispatch messages */
   MSG msg;
   if (!InvalidateRect(g_window->handle, 0, false)) crash("InvalidateRect failed.");
   while (PeekMessageA(&msg, 0, 0, 0, PM_REMOVE)) {
     TranslateMessage(&msg);
     DispatchMessage(&msg);
   }
+  return dt;
 }
 
 void
 frame_end(void) {
-  //for (u32 i = 0; i < WINDOW_W * WINDOW_H; i++) g_window->backbuffer.pixels[i] = 0xcc3333;
+  canvas_to_backbuffer(&g_window->backbuffer);
 }

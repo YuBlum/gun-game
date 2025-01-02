@@ -9,17 +9,23 @@ static constexpr u32 PALETTE[16] = {
   0x29adff, 0x83769c, 0xff77a8, 0xffccaa,
 };
 
+static inline u8
+get_buffer_pixel(int x, int y, u16 buffer_half_w, u8 *buffer) {
+  return (buffer[y * buffer_half_w + (x >> 1)] >> (4 * (x & 1))) & 0xf;
+}
+
 static inline void
-unsafe_pixel(int x, int y, u8 color) {
+set_buffer_pixel(int x, int y, u16 buffer_half_w, u8 *buffer, u8 color) {
   u8 shift = 4 * (x & 1);
-  canvas[y * (CANVAS_W >> 1) + (x >> 1)] = (color << shift) | ((0xf0 >> shift) & canvas[y * (CANVAS_W >> 1) + (x >> 1)]);
+  x >>= 1;
+  buffer[y * buffer_half_w + x] = (color << shift) | ((0xf0 >> shift) & buffer[y * buffer_half_w + x]);
 }
 
 void
 pixel(int x, int y, u8 color) {
   if (x < 0 || x >= CANVAS_W || y < 0 || y >= CANVAS_H) return;
   color &= 0b1111;
-  unsafe_pixel(x, y, color);
+  set_buffer_pixel(x, y, CANVAS_W >> 1, canvas, color);
 }
 
 void
@@ -27,6 +33,16 @@ rect(int x, int y, u16 w, u16 h, u8 color) {
   for (int ry = y; ry < y + h; ry++) {
     for (int rx = x; rx < x + w; rx++) {
       pixel(rx, ry, color);
+    }
+  }
+}
+
+
+void
+color_buffer(int x, int y, u16 buffer_w, u16 buffer_h, u8 *color) {
+  for (int _y = 0; _y < buffer_h; _y++) {
+    for (int _x = 0; _x < buffer_w; _x++) {
+      pixel(_x + x, _y + y, get_buffer_pixel(_x, _y, buffer_w >> 1, color));
     }
   }
 }
@@ -44,8 +60,7 @@ canvas_to_backbuffer(Backbuffer *backbuffer) {
     for (u32 x = 0; x < WINDOW_W; x++) {
       u32 cx = x / WINDOW_S;
       u32 cy = y / WINDOW_S;
-      u8 pixel = (canvas[cy * (CANVAS_W >> 1) + (cx >> 1)] >> (4 * (cx & 1))) & 0xf;
-      backbuffer->pixels[y * WINDOW_W + x] = PALETTE[pixel];
+      backbuffer->pixels[y * WINDOW_W + x] = PALETTE[get_buffer_pixel(cx, cy, CANVAS_W >> 1, canvas)];
     }
   }
 }

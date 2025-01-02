@@ -23,7 +23,7 @@ struct Window {
 };
 
 void make_window(Window *window);
-void frame_begin(void);
+f32 frame_begin(void);
 void frame_end(void);
 
 #endif/*_WINDOW_H_*/

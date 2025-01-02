@@ -2,6 +2,7 @@
 #include "include/window.h"
 #include "include/renderer.h"
 #include "include/math.h"
+#include "include/res/spr-test.h"
 
 extern "C" int _fltused = 0;
 
@@ -10,14 +11,13 @@ main(void) {
   Window window;
   setup_random_seed();
   make_window(&window);
-  for (u32 y = 0; y < CANVAS_H; y++) {
-    for (u32 x = 0; x < CANVAS_W; x++) {
-      pixel(x, y, rand32() & 0xf);
-    }
-  }
+  f32 x = 0, y = 0;
   while (window.is_running) {
-    frame_begin();
-    canvas_to_backbuffer(&window.backbuffer);
+    f32 dt = frame_begin();
+    clear(0);
+    x += 10 * dt;
+    y += 10 * dt;
+    color_buffer(int(x), int(y), SPR_TEST_WIDTH, SPR_TEST_HEIGHT, spr_test_color[0]);
     frame_end();
   }
   ExitProcess(0);
