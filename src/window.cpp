@@ -4,6 +4,8 @@
 static Window *g_window;
 static f32 g_frequency;
 static LARGE_INTEGER g_last_time;
+static u8 g_key_down;
+static u8 g_key_prev;
 
 static void
 crash(char *err) {
@@ -34,6 +36,28 @@ window_procedure(HWND window_handle, UINT msg, WPARAM wparam, LPARAM lparam) {
     );
     EndPaint(window_handle, &ps);
   } break;
+  case WM_KEYDOWN:
+    switch (wparam) {
+    case VK_UP:     g_key_down |= KEY_UP;    break;
+    case VK_LEFT:   g_key_down |= KEY_LEFT;  break;
+    case VK_DOWN:   g_key_down |= KEY_DOWN;  break;
+    case VK_RIGHT:  g_key_down |= KEY_RIGHT; break;
+    case 'Z':       g_key_down |= KEY_Z;     break;
+    case 'X':       g_key_down |= KEY_X;     break;
+    case VK_ESCAPE: g_key_down |= KEY_ESC;   break;
+    }
+    break;
+  case WM_KEYUP:
+    switch (wparam) {
+    case VK_UP:     g_key_down &= ~KEY_UP;    break;
+    case VK_LEFT:   g_key_down &= ~KEY_LEFT;  break;
+    case VK_DOWN:   g_key_down &= ~KEY_DOWN;  break;
+    case VK_RIGHT:  g_key_down &= ~KEY_RIGHT; break;
+    case 'Z':       g_key_down &= ~KEY_Z;     break;
+    case 'X':       g_key_down &= ~KEY_X;     break;
+    case VK_ESCAPE: g_key_down &= ~KEY_ESC;   break;
+    }
+    break;
   default:
     result = DefWindowProcA(window_handle, msg, wparam, lparam);
     break;
@@ -52,7 +76,7 @@ make_window(Window *window) {
   window_class.hCursor = LoadCursor(0, IDC_ARROW);
   window_class.lpszClassName = "gun-game-window-class";
   if (!RegisterClassA(&window_class)) crash("RegisterClassA failed.");
-  DWORD window_style = WS_OVERLAPPED|WS_CAPTION|WS_SYSMENU|WS_THICKFRAME|WS_MINIMIZEBOX;
+  DWORD window_style = WS_OVERLAPPED|WS_CAPTION|WS_SYSMENU|WS_MINIMIZEBOX;
   RECT window_rect = {0, 0, WINDOW_W, WINDOW_H};
   if (!AdjustWindowRect(&window_rect, window_style, false)) crash("AdjustWindowRect failed.");
   int window_x = CW_USEDEFAULT;
@@ -112,6 +136,8 @@ frame_begin(void) {
   QueryPerformanceCounter(&current_time);
   f32 dt = f32(current_time.QuadPart - g_last_time.QuadPart) / g_frequency;
   QueryPerformanceCounter(&g_last_time);
+  /* input */
+  g_key_prev = g_key_down;
   /* dispatch messages */
   MSG msg;
   if (!InvalidateRect(g_window->handle, 0, false)) crash("InvalidateRect failed.");
@@ -125,4 +151,14 @@ frame_begin(void) {
 void
 frame_end(void) {
   canvas_to_backbuffer(&g_window->backbuffer);
+}
+
+bool
+is_key_down(u8 key) {
+  return (g_key_down & key) != 0;
+}
+
+bool
+is_key_click(u8 key) {
+  return (g_key_down & key) != 0 && (g_key_prev & key) == 0;
 }

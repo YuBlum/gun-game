@@ -1,7 +1,3 @@
-- delta time
-- custom sprite format
-- load sprites
-- animation system
 - simple entities
 - collision system
 - platformer movement

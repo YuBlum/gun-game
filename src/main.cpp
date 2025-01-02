@@ -2,7 +2,7 @@
 #include "include/window.h"
 #include "include/renderer.h"
 #include "include/math.h"
-#include "include/res/spr-test.h"
+#include "include/game.h"
 
 extern "C" int _fltused = 0;
 
@@ -11,13 +11,11 @@ main(void) {
   Window window;
   setup_random_seed();
   make_window(&window);
-  f32 x = 0, y = 0;
+  game_start();
   while (window.is_running) {
     f32 dt = frame_begin();
-    clear(0);
-    x += 10 * dt;
-    y += 10 * dt;
-    color_buffer(int(x), int(y), SPR_TEST_WIDTH, SPR_TEST_HEIGHT, spr_test_color[0]);
+    game_update(dt);
+    game_render();
     frame_end();
   }
   ExitProcess(0);
