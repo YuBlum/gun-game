@@ -4,11 +4,12 @@
 #include "include/types.h"
 #include "include/math.h"
 #include "include/sprite.h"
+#include "include/mover.h"
 
 #define ENTITY_CAP 0x100
 
 struct Player {
-  V2i position;
+  Mover mover;
   Sprite sprite;
 };
 

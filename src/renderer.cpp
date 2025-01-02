@@ -9,12 +9,12 @@ static constexpr u32 PALETTE[16] = {
   0x29adff, 0x83769c, 0xff77a8, 0xffccaa,
 };
 
-static inline u8
+u8
 get_buffer_pixel(int x, int y, u16 buffer_half_w, u8 *buffer) {
   return (buffer[y * buffer_half_w + (x >> 1)] >> (4 * (x & 1))) & 0xf;
 }
 
-static inline void
+void
 set_buffer_pixel(int x, int y, u16 buffer_half_w, u8 *buffer, u8 color) {
   u8 shift = 4 * (x & 1);
   x >>= 1;
@@ -37,6 +37,18 @@ rect(int x, int y, u16 w, u16 h, u8 color) {
   }
 }
 
+void
+rect_outline(int x, int y, u16 w, u16 h, u8 color) {
+  for (int ry = y; ry < y + h; ry++) {
+    pixel(x, ry, color);
+    pixel(x + w - 1, ry, color);
+    if (ry == y || ry == y + h - 1) {
+      for (int rx = x + 1; rx < x + w - 1; rx++) {
+        pixel(rx, ry, color);
+      }
+    }
+  }
+}
 
 void
 color_buffer(int x, int y, u16 buffer_w, u16 buffer_h, u8 *color) {
