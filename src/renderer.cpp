@@ -2,7 +2,7 @@
 
 static u8 canvas[(CANVAS_W >> 1) * CANVAS_H];
 
-static constexpr u32 palette[16] = {
+static constexpr u32 PALETTE[16] = {
   0x000000, 0x1d2b53, 0x7e2553, 0x008751,
   0xab5236, 0x5f574f, 0xc2c3c7, 0xfff1e8,
   0xff004d, 0xffa300, 0xffec27, 0x00e436,
@@ -45,7 +45,7 @@ canvas_to_backbuffer(Backbuffer *backbuffer) {
       u32 cx = x / WINDOW_S;
       u32 cy = y / WINDOW_S;
       u8 pixel = (canvas[cy * (CANVAS_W >> 1) + (cx >> 1)] >> (4 * (cx & 1))) & 0xf;
-      backbuffer->pixels[y * WINDOW_W + x] = palette[pixel];
+      backbuffer->pixels[y * WINDOW_W + x] = PALETTE[pixel];
     }
   }
 }

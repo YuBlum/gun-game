@@ -1,21 +1,22 @@
 #include <windows.h>
 #include "include/window.h"
 #include "include/renderer.h"
+#include "include/math.h"
 
 extern "C" int _fltused = 0;
 
 void __stdcall
 main(void) {
   Window window;
+  setup_random_seed();
   make_window(&window);
-  u16 size = 10;
-  f32 x = (CANVAS_W * 0.5f) - (size * 0.5f),
-      y = (CANVAS_H * 0.5f) - (size * 0.5f);
+  for (u32 y = 0; y < CANVAS_H; y++) {
+    for (u32 x = 0; x < CANVAS_W; x++) {
+      pixel(x, y, rand32() & 0xf);
+    }
+  }
   while (window.is_running) {
     frame_begin();
-    clear(1);
-    x += 0.05f;
-    rect(int(x), int(y), size, size, 8);
     canvas_to_backbuffer(&window.backbuffer);
     frame_end();
   }
