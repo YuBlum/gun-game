@@ -29,12 +29,22 @@ pixel(int x, int y, u8 color) {
 }
 
 void
+pixel(V2i position, u8 color) {
+  pixel(position.x, position.y, color);
+}
+
+void
 rect(int x, int y, u16 w, u16 h, u8 color) {
   for (int ry = y; ry < y + h; ry++) {
     for (int rx = x; rx < x + w; rx++) {
       pixel(rx, ry, color);
     }
   }
+}
+
+void
+rect(V2i position, u16 w, u16 h, u8 color) {
+  rect(position.x, position.y, w, h, color);
 }
 
 void
@@ -51,12 +61,23 @@ rect_outline(int x, int y, u16 w, u16 h, u8 color) {
 }
 
 void
-color_buffer(int x, int y, u16 buffer_w, u16 buffer_h, u8 *color) {
+rect_outline(V2i position, u16 w, u16 h, u8 color) {
+  rect_outline(position.x, position.y, w, h, color);
+}
+
+void
+color_buffer(int x, int y, u16 buffer_w, u16 buffer_h, u8 *color, u8 transparent_pixel) {
   for (int _y = 0; _y < buffer_h; _y++) {
     for (int _x = 0; _x < buffer_w; _x++) {
-      pixel(_x + x, _y + y, get_buffer_pixel(_x, _y, buffer_w >> 1, color));
+      u8 px = get_buffer_pixel(_x, _y, buffer_w >> 1, color);
+      if (px != transparent_pixel) pixel(_x + x, _y + y, px);
     }
   }
+}
+
+void
+color_buffer(V2i position, u16 buffer_w, u16 buffer_h, u8 *color, u8 transparent_pixel) {
+  color_buffer(position.x, position.y, buffer_w, buffer_h, color, transparent_pixel);
 }
 
 void

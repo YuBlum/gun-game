@@ -22,5 +22,5 @@ player_update(Entities *e, f32 dt) {
 
 void
 player_render(Entities *e) {
-  draw_sprite(e->player.sprite, e->player.mover.position.x, e->player.mover.position.y, SPR_TEST_WIDTH, SPR_TEST_HEIGHT, (u8 *)spr_test_color);
+  draw_sprite(e->player.sprite, e->player.mover.position, SPR_TEST_WIDTH, SPR_TEST_HEIGHT, (u8 *)spr_test_color, 0);
 }
