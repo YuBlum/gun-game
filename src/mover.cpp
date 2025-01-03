@@ -30,6 +30,7 @@ update_mover(Mover *mover, f32 dt) {
       } else {
         mover->collider.position.x = (cellx0 + 1) * TILE_SIZE;
       }
+      mover->velocity.x = 0;
     }
   }
   if (mover->collider.position.y != old_position.y) {
@@ -46,6 +47,7 @@ update_mover(Mover *mover, f32 dt) {
       } else {
         mover->collider.position.y = (celly0 + 1) * TILE_SIZE;
       }
+      mover->velocity.y = 0;
     }
   }
 }

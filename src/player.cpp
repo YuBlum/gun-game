@@ -5,6 +5,7 @@
 #include "include/res/spr-test.h"
 
 #define SPEED 50
+#define JUMP_HEIGHT -100
 
 void
 player_start(Entities *e, V2i position) {
@@ -14,15 +15,14 @@ player_start(Entities *e, V2i position) {
   e->player.mover.collider.tag      = COL_PLAYER;
 }
 
-static f32 g_dt;
-
 void
 player_update(Entities *e, f32 dt) {
-  g_dt = dt;
   e->player.mover.velocity.x = f32(is_key_down(KEY_RIGHT) - is_key_down(KEY_LEFT)) * SPEED;
-  e->player.mover.velocity.y = f32(is_key_down(KEY_DOWN) - is_key_down(KEY_UP)) * SPEED;
+  e->player.mover.velocity.y += GRAVITY * dt;
+  if (e->player.mover.velocity.y > GRAVITY_CAP) e->player.mover.velocity.y = GRAVITY_CAP;
+  if (is_key_click(KEY_Z)) e->player.mover.velocity.y = JUMP_HEIGHT;
   update_sprite(&e->player.sprite, SPR_TEST_FRAMES, spr_test_frame_duration, dt);
-  update_mover(&e->player.mover, g_dt);
+  update_mover(&e->player.mover, dt);
 }
 
 void
