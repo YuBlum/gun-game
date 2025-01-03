@@ -2,9 +2,10 @@
 #define _MOVER_H_
 
 #include "include/math.h"
+#include "include/collider.h"
 
 struct Mover {
-  V2i position;
+  Collider collider;
   V2f velocity;
   V2f remainder;
 };

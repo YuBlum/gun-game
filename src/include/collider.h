@@ -10,9 +10,9 @@ enum ColliderTag {
 
 struct Collider {
   ColliderTag tag;
-  V2i size;
-}
+  V2i position;
+};
 
-bool aabb_collision(V2i p0, Collider *c0, V2i p1, Collider *c1);
+bool aabb_collision(Collider *c0, Collider *c1);
 
 #endif/*_COLLIDER_H_*/
