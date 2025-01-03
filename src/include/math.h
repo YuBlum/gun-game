@@ -54,5 +54,6 @@ static inline V2f operator -(V2f a) { return {-a.x, -a.y}; }
 
 void setup_random_seed(void);
 u32 rand32(void);
+f32 approach(f32 start, f32 end, f32 amount);
 
 #endif/*_MATH_H_*/

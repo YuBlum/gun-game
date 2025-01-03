@@ -11,6 +11,7 @@
 struct Player {
   Mover mover;
   Sprite sprite;
+  f32 jump_timer;
 };
 
 struct Entities {

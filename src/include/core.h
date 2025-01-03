@@ -8,7 +8,7 @@
 #define TILE_SIZE  8
 #define TILE_SHIFT 3
 
-#define GRAVITY 300
+#define GRAVITY 250
 #define GRAVITY_CAP 500
 
 #endif/*_CORE_H_*/

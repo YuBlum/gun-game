@@ -17,3 +17,15 @@ rand32(void) {
   g_seed ^= g_seed << 5;
   return g_seed;
 }
+
+f32
+approach(f32 start, f32 end, f32 amount) {
+  if (start < end) {
+    start += amount;
+    if (start > end) return end;
+  } else {
+    start -= amount;
+    if (start < end) return end;
+  }
+  return start;
+}

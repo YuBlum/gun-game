@@ -8,7 +8,9 @@ struct Mover {
   Collider collider;
   V2f velocity;
   V2f remainder;
+  f32 weight;
   bool on_ground;
+  bool has_gravity;
 };
 
 void update_mover(Mover *mover, f32 dt);

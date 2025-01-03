@@ -6,6 +6,11 @@
 
 void
 update_mover(Mover *mover, f32 dt) {
+  if (mover->has_gravity) {
+    mover->velocity.y += GRAVITY * mover->weight * dt;
+    if (mover->velocity.y > +GRAVITY_CAP) mover->velocity.y = +GRAVITY_CAP;
+    if (mover->velocity.y < -GRAVITY_CAP) mover->velocity.y = -GRAVITY_CAP;
+  }
   mover->remainder += mover->velocity * dt;
   V2i old_position = mover->collider.position;
   if (ABS(mover->remainder.x) >= 1) {
@@ -38,10 +43,10 @@ update_mover(Mover *mover, f32 dt) {
     i32 celly1 = (mover->collider.position.y + TILE_SIZE - 1) >> TILE_SHIFT;
     i32 cellx0 = old_position.x >> TILE_SHIFT;
     i32 cellx1 = (old_position.x + TILE_SIZE - 1) >> TILE_SHIFT;
+    mover->on_ground = get_map_cell(cellx0, celly1) == CELL_SOLID || get_map_cell(cellx1, celly1) == CELL_SOLID;
     if (get_map_cell(cellx0, celly0) == CELL_SOLID ||
         get_map_cell(cellx1, celly0) == CELL_SOLID ||
-        get_map_cell(cellx0, celly1) == CELL_SOLID ||
-        get_map_cell(cellx1, celly1) == CELL_SOLID) {
+        mover->on_ground) {
       if (mover->velocity.y > 0) {
         mover->collider.position.y = celly0 * TILE_SIZE;
       } else {

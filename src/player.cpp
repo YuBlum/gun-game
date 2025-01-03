@@ -4,28 +4,54 @@
 #include "include/renderer.h"
 #include "include/res/spr-test.h"
 
-#define SPEED 50
-#define JUMP_HEIGHT -100
+#define MAX_SPEED            60.0f
+#define GROUND_ACCELERATION  650.0f
+#define AIR_ACCELERATION     800.0f
+#define FRICTION             650.0f
+#define JUMP_VELOCITY       -75.0f
+#define JUMP_TIMER_MAX       0.15f
+#define JUMPING_WEIGHT       1.50f
+#define FALLING_WEIGHT       1.00f
 
 void
 player_start(Entities *e, V2i position) {
-  e->player.mover  = {};
-  e->player.sprite = {};
-  e->player.mover.collider.position = position;
-  e->player.mover.collider.tag      = COL_PLAYER;
+  Player *p = &e->player;
+  p->mover  = {};
+  p->sprite = {};
+  p->jump_timer = 0;
+  p->mover.weight            = 1.0f;
+  p->mover.has_gravity       = true;
+  p->mover.collider.tag      = COL_PLAYER;
+  p->mover.collider.position = position;
 }
 
 void
 player_update(Entities *e, f32 dt) {
-  e->player.mover.velocity.x = f32(is_key_down(KEY_RIGHT) - is_key_down(KEY_LEFT)) * SPEED;
-  e->player.mover.velocity.y += GRAVITY * dt;
-  if (e->player.mover.velocity.y > GRAVITY_CAP) e->player.mover.velocity.y = GRAVITY_CAP;
-  if (is_key_click(KEY_Z)) e->player.mover.velocity.y = JUMP_HEIGHT;
-  update_sprite(&e->player.sprite, SPR_TEST_FRAMES, spr_test_frame_duration, dt);
-  update_mover(&e->player.mover, dt);
+  Player *p = &e->player;
+  f32 input = f32(is_key_down(KEY_RIGHT) - is_key_down(KEY_LEFT));
+  f32 acceleration = p->mover.on_ground ? GROUND_ACCELERATION : AIR_ACCELERATION;
+  p->mover.velocity.x += input * acceleration * dt;
+  if (ABS(p->mover.velocity.x) > MAX_SPEED) {
+    p->mover.velocity.x = approach(
+      p->mover.velocity.x,
+      MAX_SPEED * input,
+      1500 * dt
+    );
+  }
+  if (input == 0.0f) p->mover.velocity.x = approach(p->mover.velocity.x, 0, FRICTION * dt);
+  if (is_key_click(KEY_Z) && p->mover.on_ground) p->jump_timer = JUMP_TIMER_MAX;
+  if (p->jump_timer > 0) {
+    if (!is_key_down(KEY_Z)) p->jump_timer = 0;
+    p->mover.velocity.y = JUMP_VELOCITY;
+    p->jump_timer -= dt;
+  }
+  p->mover.weight = p->mover.velocity.y < 0 ? JUMPING_WEIGHT : FALLING_WEIGHT;
+  update_sprite(&p->sprite, SPR_TEST_FRAMES, spr_test_frame_duration, dt);
+  update_mover(&p->mover, dt);
 }
 
 void
 player_render(Entities *e) {
-  draw_sprite(e->player.sprite, e->player.mover.collider.position, SPR_TEST_WIDTH, SPR_TEST_HEIGHT, (u8 *)spr_test_color, 0);
+  Player *p = &e->player;
+  draw_sprite(p->sprite, p->mover.collider.position, SPR_TEST_WIDTH, SPR_TEST_HEIGHT, (u8 *)spr_test_color, 0);
 }
