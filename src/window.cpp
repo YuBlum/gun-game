@@ -27,9 +27,9 @@ window_procedure(HWND window_handle, UINT msg, WPARAM wparam, LPARAM lparam) {
     HDC hdc = BeginPaint(window_handle, &ps);
     BitBlt(
       hdc,
-      ps.rcPaint.left, ps.rcPaint.top,
-      ps.rcPaint.right - ps.rcPaint.left,
-      ps.rcPaint.bottom - ps.rcPaint.top,
+      0, 0,
+      WINDOW_W,
+      WINDOW_H,
       g_window->backbuffer.hdc,
       0, 0,
       SRCCOPY
@@ -57,6 +57,16 @@ window_procedure(HWND window_handle, UINT msg, WPARAM wparam, LPARAM lparam) {
     case 'X':       g_key_down &= ~KEY_X;     break;
     case VK_ESCAPE: g_key_down &= ~KEY_ESC;   break;
     }
+    break;
+  case WM_SETFOCUS:
+    g_window->has_focus = true;
+    break;
+  case WM_KILLFOCUS:
+    g_window->has_focus = false;
+    break;
+  case WM_MOVE:
+    QueryPerformanceCounter(&g_last_time);
+    result = DefWindowProcA(window_handle, msg, wparam, lparam);
     break;
   default:
     result = DefWindowProcA(window_handle, msg, wparam, lparam);
@@ -104,6 +114,7 @@ make_window(Window *window) {
   if (!g_window->handle) crash("CreateWindowA failed.");
   ShowWindow(g_window->handle, SW_SHOW);
   g_window->is_running = true;
+  g_window->has_focus = true;
   /* create backbuffer */
   g_window->backbuffer.hdc = CreateCompatibleDC(0);
   g_window->backbuffer.info.bmiHeader.biSize = sizeof (BITMAPINFOHEADER);

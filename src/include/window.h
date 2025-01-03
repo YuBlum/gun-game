@@ -28,6 +28,7 @@ struct Window {
   HWND handle;
   Backbuffer backbuffer;
   bool is_running;
+  bool has_focus;
 };
 
 void make_window(Window *window);

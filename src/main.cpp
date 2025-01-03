@@ -3,6 +3,7 @@
 #include "include/renderer.h"
 #include "include/math.h"
 #include "include/game.h"
+#include "include/debug.h"
 
 extern "C" int _fltused = 0;
 
@@ -14,8 +15,10 @@ main(void) {
   game_start();
   while (window.is_running) {
     f32 dt = frame_begin();
-    if (is_key_down(KEY_ESC)) window.is_running = false;
-    game_update(dt);
+    if (window.has_focus) {
+      if (is_key_down(KEY_ESC)) window.is_running = false;
+      game_update(dt);
+    }
     game_render();
     frame_end();
   }
