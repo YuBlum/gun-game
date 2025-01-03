@@ -11,11 +11,21 @@ update_sprite(Sprite *sprite, u32 frames_amount, u16 *frames_duration, f32 dt) {
 }
 
 void
-draw_sprite(Sprite sprite, int x, int y, u16 width, u16 height, u8 *colors, u8 transparent_pixel) {
-  color_buffer(x, y, width, height, &colors[sprite.frame * (width >> 2) * height], transparent_pixel);
+draw_sprite(Sprite sprite, int x, int y, u16 width, u16 height, u8 *pixels, u8 color) {
+  color_buffer(x, y, width, height, &pixels[sprite.frame * (width >> 3) * height], color);
 }
 
 void
-draw_sprite(Sprite sprite, V2i position, u16 width, u16 height, u8 *colors, u8 transparent_pixel) {
-  draw_sprite(sprite, position.x, position.y, width, height, colors, transparent_pixel);
+draw_sprite(Sprite sprite, int x, int y, u16 width, u16 height, u8 *pixels, u8 color1, u8 color0) {
+  color_buffer(x, y, width, height, &pixels[sprite.frame * (width >> 3) * height], color1, color0);
+}
+
+void
+draw_sprite(Sprite sprite, V2i position, u16 width, u16 height, u8 *pixels, u8 color) {
+  draw_sprite(sprite, position.x, position.y, width, height, pixels, color);
+}
+
+void
+draw_sprite(Sprite sprite, V2i position, u16 width, u16 height, u8 *pixels, u8 color1, u8 color0) {
+  draw_sprite(sprite, position.x, position.y, width, height, pixels, color1, color0);
 }

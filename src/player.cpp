@@ -49,15 +49,10 @@ player_update(Entities *e, f32 dt) {
   p->mover.weight = p->mover.velocity.y < 0 ? JUMPING_WEIGHT : FALLING_WEIGHT;
   update_sprite(&p->sprite, SPR_TEST_FRAMES, spr_test_frame_duration, dt);
   update_mover(&p->mover, dt);
-  /*
-  LOG(p->mover.collider.position.x, false);
-  LOG(", ");
-  LOG(p->mover.collider.position.y);
-  */
 }
 
 void
 player_render(Entities *e) {
   Player *p = &e->player;
-  draw_sprite(p->sprite, p->mover.collider.position, SPR_TEST_WIDTH, SPR_TEST_HEIGHT, (u8 *)spr_test_color, 0);
+  draw_sprite(p->sprite, p->mover.collider.position, SPR_TEST_WIDTH, SPR_TEST_HEIGHT, (u8 *)spr_test_pixels, 3);
 }
