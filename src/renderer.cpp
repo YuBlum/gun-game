@@ -1,31 +1,26 @@
 #include "include/renderer.h"
 
-static u8 canvas[(CANVAS_W >> 1) * CANVAS_H];
+static u8 canvas[(CANVAS_W >> 2) * CANVAS_H];
 
-static constexpr u32 PALETTE[16] = {
-  0x000000, 0x1d2b53, 0x7e2553, 0x008751,
-  0xab5236, 0x5f574f, 0xc2c3c7, 0xfff1e8,
-  0xff004d, 0xffa300, 0xffec27, 0x00e436,
-  0x29adff, 0x83769c, 0xff77a8, 0xffccaa,
-};
+static constexpr u32 PALETTE[4] = { 0x00303b, 0xff7777, 0xffce96, 0xf1f2da, };
 
-u8
-get_buffer_pixel(int x, int y, u16 buffer_half_w, u8 *buffer) {
-  return (buffer[y * buffer_half_w + (x >> 1)] >> (4 * (x & 1))) & 0xf;
+static u8
+get_buffer_pixel(int x, int y, u16 buffer_two_halfs_w, u8 *buffer) {
+  return (buffer[y * buffer_two_halfs_w + (x >> 2)] >> ((x & 3) * 2)) & 0x3;
 }
 
-void
-set_buffer_pixel(int x, int y, u16 buffer_half_w, u8 *buffer, u8 color) {
-  u8 shift = 4 * (x & 1);
-  x >>= 1;
-  buffer[y * buffer_half_w + x] = (color << shift) | ((0xf0 >> shift) & buffer[y * buffer_half_w + x]);
+static void
+set_buffer_pixel(int x, int y, u16 buffer_two_halfs_w, u8 *buffer, u8 color) {
+  u8 shift = 2 * (x & 3);
+  x >>= 2;
+  buffer[y * buffer_two_halfs_w + x] = (color << shift) | ((~(3 << shift)) & buffer[y * buffer_two_halfs_w + x]);
 }
 
 void
 pixel(int x, int y, u8 color) {
   if (x < 0 || x >= CANVAS_W || y < 0 || y >= CANVAS_H) return;
   color &= 0b1111;
-  set_buffer_pixel(x, y, CANVAS_W >> 1, canvas, color);
+  set_buffer_pixel(x, y, CANVAS_W >> 2, canvas, color);
 }
 
 void
@@ -69,7 +64,7 @@ void
 color_buffer(int x, int y, u16 buffer_w, u16 buffer_h, u8 *color, u8 transparent_pixel) {
   for (int _y = 0; _y < buffer_h; _y++) {
     for (int _x = 0; _x < buffer_w; _x++) {
-      u8 px = get_buffer_pixel(_x, _y, buffer_w >> 1, color);
+      u8 px = get_buffer_pixel(_x, _y, buffer_w >> 2, color);
       if (px != transparent_pixel) pixel(_x + x, _y + y, px);
     }
   }
@@ -84,7 +79,7 @@ void
 clear(u8 color) {
   color &= 0b1111;
   color |= color << 4;
-  for (u32 i = 0; i < ((CANVAS_W * CANVAS_H) >> 1); i++) canvas[i] = color;
+  for (u32 i = 0; i < ((CANVAS_W * CANVAS_H) >> 2); i++) canvas[i] = color;
 }
 
 void
@@ -93,7 +88,7 @@ canvas_to_backbuffer(Backbuffer *backbuffer) {
     for (u32 x = 0; x < WINDOW_W; x++) {
       u32 cx = x / WINDOW_S;
       u32 cy = y / WINDOW_S;
-      backbuffer->pixels[y * WINDOW_W + x] = PALETTE[get_buffer_pixel(cx, cy, CANVAS_W >> 1, canvas)];
+      backbuffer->pixels[y * WINDOW_W + x] = PALETTE[get_buffer_pixel(cx, cy, CANVAS_W >> 2, canvas)];
     }
   }
 }
