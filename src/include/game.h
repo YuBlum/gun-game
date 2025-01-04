@@ -14,6 +14,7 @@ struct Player {
   f32 variable_jump_timer;
   f32 jump_buffer_timer;
   f32 coyote_timer;
+  bool alive;
 };
 
 struct Entities {

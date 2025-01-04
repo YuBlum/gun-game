@@ -3,19 +3,25 @@
   "WorkspaceRootPath": "D:\\dev\\gun-game\\bin\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|D:\\dev\\gun-game\\src\\debug.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|D:\\dev\\gun-game\\src\\map.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|D:\\dev\\gun-game\\src\\game.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|D:\\dev\\gun-game\\src\\main.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|D:\\dev\\gun-game\\src\\renderer.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|D:\\dev\\gun-game\\src\\debug.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|D:\\dev\\gun-game\\src\\player.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|D:\\dev\\gun-game\\src\\mover.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|D:\\dev\\gun-game\\src\\game.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
     }
   ],
   "DocumentGroupContainers": [
@@ -25,37 +31,24 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 0,
+          "SelectedChildIndex": 4,
           "Children": [
             {
               "$type": "Document",
-              "DocumentIndex": 0,
-              "Title": "debug.cpp",
-              "DocumentMoniker": "D:\\dev\\gun-game\\src\\debug.cpp",
-              "RelativeDocumentMoniker": "..\\src\\debug.cpp",
-              "ToolTip": "D:\\dev\\gun-game\\src\\debug.cpp",
-              "RelativeToolTip": "..\\src\\debug.cpp",
-              "ViewState": "AgIAAB0AAAAAAAAAAAAkwCsAAAAAAAAAAAAAAA==",
+              "DocumentIndex": 2,
+              "Title": "main.cpp",
+              "DocumentMoniker": "D:\\dev\\gun-game\\src\\main.cpp",
+              "RelativeDocumentMoniker": "..\\src\\main.cpp",
+              "ToolTip": "D:\\dev\\gun-game\\src\\main.cpp",
+              "RelativeToolTip": "..\\src\\main.cpp",
+              "ViewState": "AgIAAAgAAAAAAAAAAADwvxMAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
-              "WhenOpened": "2025-01-03T16:08:31.73Z",
+              "WhenOpened": "2025-01-04T19:04:42.477Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
-              "Title": "renderer.cpp",
-              "DocumentMoniker": "D:\\dev\\gun-game\\src\\renderer.cpp",
-              "RelativeDocumentMoniker": "..\\src\\renderer.cpp",
-              "ToolTip": "D:\\dev\\gun-game\\src\\renderer.cpp",
-              "RelativeToolTip": "..\\src\\renderer.cpp",
-              "ViewState": "AgIAAEUAAAAAAAAAAAAawEgAAAAEAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
-              "WhenOpened": "2025-01-03T12:24:14.313Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 3,
+              "DocumentIndex": 6,
               "Title": "mover.cpp",
               "DocumentMoniker": "D:\\dev\\gun-game\\src\\mover.cpp",
               "RelativeDocumentMoniker": "..\\src\\mover.cpp",
@@ -67,7 +60,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 5,
               "Title": "player.cpp",
               "DocumentMoniker": "D:\\dev\\gun-game\\src\\player.cpp",
               "RelativeDocumentMoniker": "..\\src\\player.cpp",
@@ -79,15 +72,55 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 4,
+              "DocumentIndex": 1,
               "Title": "game.cpp",
               "DocumentMoniker": "D:\\dev\\gun-game\\src\\game.cpp",
               "RelativeDocumentMoniker": "..\\src\\game.cpp",
               "ToolTip": "D:\\dev\\gun-game\\src\\game.cpp",
               "RelativeToolTip": "..\\src\\game.cpp",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAkAAAAAAAAAAAAAAA==",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA8AAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
-              "WhenOpened": "2025-01-03T01:32:13.57Z"
+              "WhenOpened": "2025-01-03T01:32:13.57Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "map.cpp",
+              "DocumentMoniker": "D:\\dev\\gun-game\\src\\map.cpp",
+              "RelativeDocumentMoniker": "..\\src\\map.cpp",
+              "ToolTip": "D:\\dev\\gun-game\\src\\map.cpp",
+              "RelativeToolTip": "..\\src\\map.cpp",
+              "ViewState": "AgIAAAwAAAAAAAAAAAAuwF0AAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
+              "WhenOpened": "2025-01-04T19:04:01.257Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "renderer.cpp",
+              "DocumentMoniker": "D:\\dev\\gun-game\\src\\renderer.cpp",
+              "RelativeDocumentMoniker": "..\\src\\renderer.cpp",
+              "ToolTip": "D:\\dev\\gun-game\\src\\renderer.cpp",
+              "RelativeToolTip": "..\\src\\renderer.cpp",
+              "ViewState": "AgIAADwAAAAAAAAAAAAawEgAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
+              "WhenOpened": "2025-01-03T12:24:14.313Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "debug.cpp",
+              "DocumentMoniker": "D:\\dev\\gun-game\\src\\debug.cpp",
+              "RelativeDocumentMoniker": "..\\src\\debug.cpp",
+              "ToolTip": "D:\\dev\\gun-game\\src\\debug.cpp",
+              "RelativeToolTip": "..\\src\\debug.cpp",
+              "ViewState": "AgIAAB0AAAAAAAAAAAAkwCsAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
+              "WhenOpened": "2025-01-03T16:08:31.73Z",
+              "EditorCaption": ""
             }
           ]
         }

@@ -1,9 +1,7 @@
-- coyote time & jump buffer
-- screen transition
 - machine gun
-- particles
 - 3 enemies
 - 1 boss
+- particles
 - shop
 - different items
 - 10 to 20 screens

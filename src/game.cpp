@@ -7,11 +7,14 @@ static Entities g_entities;
 
 void
 game_start(void) {
-  load_map(&g_entities, 0);
+  g_entities = {};
+  map_system_start(&g_entities);
 }
 
 void
 game_update(f32 dt) {
+  map_system_update(&g_entities, dt);
+  if (is_changing_map()) return;
   player_update(&g_entities, dt);
 }
 

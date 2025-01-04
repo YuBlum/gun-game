@@ -2,6 +2,7 @@
 #include "include/core.h"
 #include "include/window.h"
 #include "include/renderer.h"
+#include "include/map.h"
 #include "include/debug.h"
 #include "include/res/spr-test.h"
 
@@ -16,12 +17,11 @@
 #define JUMP_BUFFER_TIMER_MAX    0.12f
 #define COYOTE_TIMER_MAX         0.06f
 
-static bool is_fade_in;
-
 void
 player_start(Entities *e, V2i position) {
   Player *p = &e->player;
-  p->mover  = {};
+  p->alive = true;
+  p->mover = {};
   p->animator = {};
   p->coyote_timer = 0;
   p->jump_buffer_timer = 0;
@@ -35,6 +35,15 @@ player_start(Entities *e, V2i position) {
 void
 player_update(Entities *e, f32 dt) {
   Player *p = &e->player;
+  /* change map */
+  {
+    i8 next_map = -1;
+    if (p->mover.collider.position.x + SPR_TEST_WIDTH  > CANVAS_W) next_map = get_next_map(MAP_RIGHT);
+    if (p->mover.collider.position.x                   < 0       ) next_map = get_next_map(MAP_LEFT);
+    if (p->mover.collider.position.y + SPR_TEST_HEIGHT > CANVAS_H) next_map = get_next_map(MAP_BOTTOM);
+    if (p->mover.collider.position.y                   < 0       ) next_map = get_next_map(MAP_TOP);
+    if (next_map != -1) load_map(next_map);
+  }
   /* horizontal movement */
   f32 input = f32(is_key_down(KEY_RIGHT) - is_key_down(KEY_LEFT));
   f32 acceleration = p->mover.on_ground ? GROUND_ACCELERATION : AIR_ACCELERATION;
@@ -64,12 +73,12 @@ player_update(Entities *e, f32 dt) {
   }
   p->mover.weight = p->mover.velocity.y < 0 ? JUMPING_WEIGHT : FALLING_WEIGHT;
   /* update components */
-  update_animator(&p->animator, SPR_TEST_FRAMES, spr_test_frame_duration, dt);
+  update_animator(&p->animator, SPR_TEST_FRAMES, g_spr_test_frame_duration, dt);
   update_mover(&p->mover, dt);
 }
 
 void
 player_render(Entities *e) {
   Player *p = &e->player;
-  draw_animator(p->animator, p->mover.collider.position, SPR_TEST_WIDTH, SPR_TEST_HEIGHT, (u8 *)spr_test_pixels, 3);
+  draw_animator(p->animator, p->mover.collider.position, SPR_TEST_WIDTH, SPR_TEST_HEIGHT, (u8 *)g_spr_test_pixels, 3);
 }

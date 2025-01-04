@@ -4,12 +4,12 @@
 #define SPR_TEST_WIDTH   8
 #define SPR_TEST_HEIGHT  8
 #define SPR_TEST_FRAMES  3
-static u16 spr_test_frame_duration[SPR_TEST_FRAMES] = {
+static u16 g_spr_test_frame_duration[SPR_TEST_FRAMES] = {
   200,
   100,
   100,
 };
-static u8 spr_test_pixels[SPR_TEST_FRAMES][(SPR_TEST_WIDTH >> 3)*SPR_TEST_HEIGHT] = {
+static u8 g_spr_test_pixels[SPR_TEST_FRAMES][(SPR_TEST_WIDTH >> 3)*SPR_TEST_HEIGHT] = {
   {
     0b00111100,
     0b01111110,

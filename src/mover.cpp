@@ -22,35 +22,35 @@ update_mover(Mover *mover, f32 dt) {
     mover->remainder.y -= i32(mover->remainder.y);
   }
   if (mover->collider.position.x != old_position.x) {
-    i32 celly0 = old_position.y >> TILE_SHIFT;
-    i32 celly1 = (old_position.y + TILE_SIZE - 1) >> TILE_SHIFT;
-    i32 cellx0 = mover->collider.position.x >> TILE_SHIFT;
-    i32 cellx1 = (mover->collider.position.x + TILE_SIZE - 1) >> TILE_SHIFT;
-    if (get_map_cell(cellx0, celly0) == CELL_SOLID ||
-        get_map_cell(cellx0, celly1) == CELL_SOLID ||
-        get_map_cell(cellx1, celly0) == CELL_SOLID ||
-        get_map_cell(cellx1, celly1) == CELL_SOLID) {
+    i32 tiley0 = old_position.y >> TILE_SHIFT;
+    i32 tiley1 = (old_position.y + TILE_SIZE - 1) >> TILE_SHIFT;
+    i32 tilex0 = mover->collider.position.x >> TILE_SHIFT;
+    i32 tilex1 = (mover->collider.position.x + TILE_SIZE - 1) >> TILE_SHIFT;
+    if (get_map_tile(tilex0, tiley0) == TILE_SOLID ||
+        get_map_tile(tilex0, tiley1) == TILE_SOLID ||
+        get_map_tile(tilex1, tiley0) == TILE_SOLID ||
+        get_map_tile(tilex1, tiley1) == TILE_SOLID) {
       if (mover->velocity.x > 0) {
-        mover->collider.position.x = cellx0 * TILE_SIZE;
+        mover->collider.position.x = tilex0 * TILE_SIZE;
       } else {
-        mover->collider.position.x = (cellx0 + 1) * TILE_SIZE;
+        mover->collider.position.x = (tilex0 + 1) * TILE_SIZE;
       }
       mover->velocity.x = 0;
     }
   }
   if (mover->collider.position.y != old_position.y) {
-    i32 celly0 = mover->collider.position.y >> TILE_SHIFT;
-    i32 celly1 = (mover->collider.position.y + TILE_SIZE - 1) >> TILE_SHIFT;
-    i32 cellx0 = old_position.x >> TILE_SHIFT;
-    i32 cellx1 = (old_position.x + TILE_SIZE - 1) >> TILE_SHIFT;
-    mover->on_ground = get_map_cell(cellx0, celly1) == CELL_SOLID || get_map_cell(cellx1, celly1) == CELL_SOLID;
-    if (get_map_cell(cellx0, celly0) == CELL_SOLID ||
-        get_map_cell(cellx1, celly0) == CELL_SOLID ||
+    i32 tiley0 = mover->collider.position.y >> TILE_SHIFT;
+    i32 tiley1 = (mover->collider.position.y + TILE_SIZE - 1) >> TILE_SHIFT;
+    i32 tilex0 = old_position.x >> TILE_SHIFT;
+    i32 tilex1 = (old_position.x + TILE_SIZE - 1) >> TILE_SHIFT;
+    mover->on_ground = get_map_tile(tilex0, tiley1) == TILE_SOLID || get_map_tile(tilex1, tiley1) == TILE_SOLID;
+    if (get_map_tile(tilex0, tiley0) == TILE_SOLID ||
+        get_map_tile(tilex1, tiley0) == TILE_SOLID ||
         mover->on_ground) {
       if (mover->velocity.y > 0) {
-        mover->collider.position.y = celly0 * TILE_SIZE;
+        mover->collider.position.y = tiley0 * TILE_SIZE;
       } else {
-        mover->collider.position.y = (celly0 + 1) * TILE_SIZE;
+        mover->collider.position.y = (tiley0 + 1) * TILE_SIZE;
       }
       mover->velocity.y = 0;
     }
