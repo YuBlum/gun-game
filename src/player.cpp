@@ -5,14 +5,16 @@
 #include "include/debug.h"
 #include "include/res/spr-test.h"
 
-#define MAX_SPEED            60.0f
-#define GROUND_ACCELERATION  650.0f
-#define AIR_ACCELERATION     800.0f
-#define FRICTION             650.0f
-#define JUMP_VELOCITY       -75.0f
-#define JUMP_TIMER_MAX       0.15f
-#define JUMPING_WEIGHT       1.50f
-#define FALLING_WEIGHT       1.00f
+#define MAX_SPEED                60.0f
+#define GROUND_ACCELERATION      650.0f
+#define AIR_ACCELERATION         800.0f
+#define FRICTION                 650.0f
+#define JUMP_VELOCITY           -75.0f
+#define JUMPING_WEIGHT           1.50f
+#define FALLING_WEIGHT           1.00f
+#define VARIABLE_JUMP_TIMER_MAX  0.15f
+#define JUMP_BUFFER_TIMER_MAX    0.12f
+#define COYOTE_TIMER_MAX         0.06f
 
 static bool is_fade_in;
 
@@ -21,7 +23,9 @@ player_start(Entities *e, V2i position) {
   Player *p = &e->player;
   p->mover  = {};
   p->animator = {};
-  p->jump_timer = 0;
+  p->coyote_timer = 0;
+  p->jump_buffer_timer = 0;
+  p->variable_jump_timer = 0;
   p->mover.weight            = 1.0f;
   p->mover.has_gravity       = true;
   p->mover.collider.tag      = COL_PLAYER;
@@ -31,6 +35,7 @@ player_start(Entities *e, V2i position) {
 void
 player_update(Entities *e, f32 dt) {
   Player *p = &e->player;
+  /* horizontal movement */
   f32 input = f32(is_key_down(KEY_RIGHT) - is_key_down(KEY_LEFT));
   f32 acceleration = p->mover.on_ground ? GROUND_ACCELERATION : AIR_ACCELERATION;
   p->mover.velocity.x += input * acceleration * dt;
@@ -38,25 +43,29 @@ player_update(Entities *e, f32 dt) {
     p->mover.velocity.x = approach(
       p->mover.velocity.x,
       MAX_SPEED * input,
-      1500 * dt
+      2000 * dt
     );
   }
   if (input == 0.0f) p->mover.velocity.x = approach(p->mover.velocity.x, 0, FRICTION * dt);
-  if (is_key_click(KEY_Z) && p->mover.on_ground) p->jump_timer = JUMP_TIMER_MAX;
-  if (p->jump_timer > 0) {
-    if (!is_key_down(KEY_Z)) p->jump_timer = 0;
+  /* jump */
+  if (is_key_click(KEY_Z)) p->jump_buffer_timer = JUMP_BUFFER_TIMER_MAX;
+  if (p->jump_buffer_timer > 0) p->jump_buffer_timer -= dt;
+  if (p->mover.on_ground) p->coyote_timer = COYOTE_TIMER_MAX;
+  if (p->coyote_timer > 0) p->coyote_timer -= dt;
+  if (p->jump_buffer_timer > 0 && p->coyote_timer > 0) {
+    p->variable_jump_timer = VARIABLE_JUMP_TIMER_MAX;
+    p->jump_buffer_timer = 0;
+    p->coyote_timer = 0;
+  }
+  if (p->variable_jump_timer > 0) {
+    if (!is_key_down(KEY_Z)) p->variable_jump_timer = 0;
     p->mover.velocity.y = JUMP_VELOCITY;
-    p->jump_timer -= dt;
+    p->variable_jump_timer -= dt;
   }
   p->mover.weight = p->mover.velocity.y < 0 ? JUMPING_WEIGHT : FALLING_WEIGHT;
+  /* update components */
   update_animator(&p->animator, SPR_TEST_FRAMES, spr_test_frame_duration, dt);
   update_mover(&p->mover, dt);
-
-  if (is_key_click(KEY_DEBUG) && !in_fade()) {
-    if (is_fade_in) fade_in();
-    else fade_out();
-    is_fade_in = !is_fade_in;
-  }
 }
 
 void

@@ -11,7 +11,9 @@
 struct Player {
   Mover mover;
   Animator animator;
-  f32 jump_timer;
+  f32 variable_jump_timer;
+  f32 jump_buffer_timer;
+  f32 coyote_timer;
 };
 
 struct Entities {
