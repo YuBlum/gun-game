@@ -16,6 +16,11 @@ void color_buffer(int x, int y, u16 buffer_w, u16 buffer_h, u8 *buffer, u8 color
 void color_buffer(V2i position, u16 buffer_w, u16 buffer_h, u8 *buffer, u8 color);
 void color_buffer(int x, int y, u16 buffer_w, u16 buffer_h, u8 *buffer, u8 color1, u8 color0);
 void color_buffer(V2i position, u16 buffer_w, u16 buffer_h, u8 *buffer, u8 color1, u8 color0);
+void fade_out(void);
+void fade_in(void);
+bool in_fade(void);
+void set_palette(u8 new_palette);
+void update_renderer(f32 dt);
 void canvas_to_backbuffer(Backbuffer *backbuffer);
 
 #endif/*_RENDERER_H_*/

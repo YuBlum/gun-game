@@ -45,6 +45,7 @@ window_procedure(HWND window_handle, UINT msg, WPARAM wparam, LPARAM lparam) {
     case 'Z':       g_key_down |= KEY_Z;     break;
     case 'X':       g_key_down |= KEY_X;     break;
     case VK_ESCAPE: g_key_down |= KEY_ESC;   break;
+    case VK_F1:     g_key_down |= KEY_DEBUG; break;
     }
     break;
   case WM_KEYUP:
@@ -56,6 +57,7 @@ window_procedure(HWND window_handle, UINT msg, WPARAM wparam, LPARAM lparam) {
     case 'Z':       g_key_down &= ~KEY_Z;     break;
     case 'X':       g_key_down &= ~KEY_X;     break;
     case VK_ESCAPE: g_key_down &= ~KEY_ESC;   break;
+    case VK_F1:     g_key_down &= ~KEY_DEBUG; break;
     }
     break;
   case WM_SETFOCUS:

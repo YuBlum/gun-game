@@ -14,11 +14,13 @@
 #define JUMPING_WEIGHT       1.50f
 #define FALLING_WEIGHT       1.00f
 
+static bool is_fade_in;
+
 void
 player_start(Entities *e, V2i position) {
   Player *p = &e->player;
   p->mover  = {};
-  p->sprite = {};
+  p->animator = {};
   p->jump_timer = 0;
   p->mover.weight            = 1.0f;
   p->mover.has_gravity       = true;
@@ -47,12 +49,18 @@ player_update(Entities *e, f32 dt) {
     p->jump_timer -= dt;
   }
   p->mover.weight = p->mover.velocity.y < 0 ? JUMPING_WEIGHT : FALLING_WEIGHT;
-  update_sprite(&p->sprite, SPR_TEST_FRAMES, spr_test_frame_duration, dt);
+  update_animator(&p->animator, SPR_TEST_FRAMES, spr_test_frame_duration, dt);
   update_mover(&p->mover, dt);
+
+  if (is_key_click(KEY_DEBUG) && !in_fade()) {
+    if (is_fade_in) fade_in();
+    else fade_out();
+    is_fade_in = !is_fade_in;
+  }
 }
 
 void
 player_render(Entities *e) {
   Player *p = &e->player;
-  draw_sprite(p->sprite, p->mover.collider.position, SPR_TEST_WIDTH, SPR_TEST_HEIGHT, (u8 *)spr_test_pixels, 3);
+  draw_animator(p->animator, p->mover.collider.position, SPR_TEST_WIDTH, SPR_TEST_HEIGHT, (u8 *)spr_test_pixels, 3);
 }

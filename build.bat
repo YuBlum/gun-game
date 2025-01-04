@@ -1,9 +1,9 @@
 @echo off
 
 set OUT=game
-set SRCS=..\src\main.cpp ..\src\window.cpp ..\src\renderer.cpp ..\src\math.cpp ..\src\sprite.cpp ..\src\game.cpp ..\src\player.cpp ..\src\mover.cpp ..\src\map.cpp ..\src\collider.cpp
+set SRCS=..\src\main.cpp ..\src\window.cpp ..\src\renderer.cpp ..\src\math.cpp ..\src\animator.cpp ..\src\game.cpp ..\src\player.cpp ..\src\mover.cpp ..\src\map.cpp ..\src\collider.cpp
 set LIBS=Kernel32.lib User32.lib Gdi32.lib
-set DEBUG=false
+set DEBUG=true
 
 if %DEBUG% == true (
   set EXTRA_FLAGS=-Zi -DDEBUG

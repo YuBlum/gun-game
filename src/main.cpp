@@ -18,6 +18,7 @@ main(void) {
     if (window.has_focus) {
       if (is_key_down(KEY_ESC)) window.is_running = false;
       game_update(dt);
+      update_renderer(dt);
     }
     game_render();
     frame_end();

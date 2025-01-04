@@ -16,6 +16,7 @@
 #define KEY_Z     (1 << 4)
 #define KEY_X     (1 << 5)
 #define KEY_ESC   (1 << 6)
+#define KEY_DEBUG (1 << 7)
 
 struct Backbuffer {
   HDC hdc;

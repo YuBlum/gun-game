@@ -1,8 +1,9 @@
-- platformer movement
+- coyote time & jump buffer
+- screen transition
 - machine gun
 - particles
 - 3 enemies
 - 1 boss
-- 10 screens
-- camera movement
-- screen transition
+- shop
+- different items
+- 10 to 20 screens
