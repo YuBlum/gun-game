@@ -1,7 +1,4 @@
 #include <windows.h>
-#include "include/window.h"
-#include "include/renderer.h"
-#include "include/math.h"
 #include "include/game.h"
 #include "include/debug.h"
 
@@ -9,18 +6,19 @@ extern "C" int _fltused = 0;
 
 void __stdcall
 main(void) {
-  Window window;
+  Game game;
   setup_random_seed();
-  make_window(&window);
-  game_start();
-  while (window.is_running) {
+  make_window(&game.window);
+  make_renderer(&game.renderer);
+  game_start(&game.entities);
+  while (game.window.is_running) {
     f32 dt = frame_begin();
-    //if (window.has_focus) {
-      if (is_key_down(KEY_ESC)) window.is_running = false;
-      game_update(dt);
+    if (game.window.has_focus) {
+      if (is_key_down(KEY_ESC)) game.window.is_running = false;
+      game_update(&game.entities, dt);
       update_renderer(dt);
-    //}
-    game_render();
+    }
+    game_render(&game.entities);
     frame_end();
   }
   ExitProcess(0);

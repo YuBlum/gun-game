@@ -4,27 +4,25 @@
 #include "include/debug.h"
 #include "include/map.h"
 
-static Entities g_entities;
-
 void
-game_start(void) {
-  g_entities = {};
-  map_system_start(&g_entities);
+game_start(Entities *e) {
+  *e = {};
+  map_system_start(e);
 }
 
 void
-game_update(f32 dt) {
-  map_system_update(&g_entities);
+game_update(Entities *e, f32 dt) {
+  map_system_update(e);
   if (in_map_transition()) return;
-  player_update(&g_entities, dt);
+  player_update(e, dt);
 #if DEBUG
   debug_update();
 #endif
 }
 
 void
-game_render(void) {
+game_render(Entities *e) {
   clear(0);
   debug_render_map();
-  player_render(&g_entities);
+  player_render(e);
 }

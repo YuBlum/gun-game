@@ -5,6 +5,21 @@
 #include "include/math.h"
 #include "include/window.h"
 
+enum Fade : u8 {
+  FADE_NONE = 0,
+  FADE_OUT,
+  FADE_IN,
+};
+
+struct Renderer {
+  u8 canvas[(CANVAS_W >> 2) * CANVAS_H];
+  u8 current_palette = 0b11100100;// 3, 2, 1, 0
+  Fade fade = FADE_NONE; 
+  f32 fade_timer = 0; 
+  u8 fade_iter = 0;
+};
+
+void make_renderer(Renderer *renderer);
 void clear(u8 color);
 void pixel(int x, int y, u8 color);
 void pixel(V2i position, u8 color);

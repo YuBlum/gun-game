@@ -1,7 +1,7 @@
 #ifndef _MAP_H_
 #define _MAP_H_
 
-#include "include/game.h"
+#include "include/entities.h"
 
 #define TILE_NONE   0x0
 #define TILE_SOLID  0x3
