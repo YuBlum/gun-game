@@ -6,19 +6,20 @@
 #include "include/debug.h"
 #include "include/res/spr-test.h"
 
-#define MAX_SPEED                60.0f
-#define GROUND_ACCELERATION      650.0f
-#define AIR_ACCELERATION         800.0f
-#define FRICTION                 650.0f
-#define JUMP_VELOCITY           -75.0f
-#define JUMPING_WEIGHT           1.50f
-#define FALLING_WEIGHT           1.00f
-#define VARIABLE_JUMP_TIMER_MAX  0.15f
-#define JUMP_BUFFER_TIMER_MAX    0.12f
-#define COYOTE_TIMER_MAX         0.06f
+#define MAX_SPEED                  60.0f
+#define GROUND_ACCELERATION        650.0f
+#define AIR_ACCELERATION           800.0f
+#define FRICTION                   650.0f
+#define START_WITH_JUMP_VELOCITY  -125.0f
+#define JUMP_VELOCITY             -75.0f
+#define JUMPING_WEIGHT             1.50f
+#define FALLING_WEIGHT             1.00f
+#define VARIABLE_JUMP_TIMER_MAX    0.15f
+#define JUMP_BUFFER_TIMER_MAX      0.12f
+#define COYOTE_TIMER_MAX           0.06f
 
 void
-player_start(Entities *e, V2i position) {
+player_start(Entities *e, V2i position, bool start_with_jump) {
   Player *p = &e->player;
   p->alive = true;
   p->mover = {};
@@ -30,6 +31,7 @@ player_start(Entities *e, V2i position) {
   p->mover.has_gravity       = true;
   p->mover.collider.tag      = COL_PLAYER;
   p->mover.collider.position = position;
+  if (start_with_jump) p->mover.velocity.y = START_WITH_JUMP_VELOCITY;
 }
 
 void

@@ -18,10 +18,11 @@ enum SurroundingMap : u8 {
 
 void map_system_start(Entities *e);
 void load_map(u8 map_index);
+void reload_map(void);
 MapTile get_map_tile(int x, int y);
 i8 get_next_map(SurroundingMap direction);
-bool is_changing_map(void);
-void map_system_update(Entities *e, f32 dt);
+bool in_map_transition(void);
+void map_system_update(Entities *e);
 void debug_render_map(void);
 
 #endif/*_MAP_H_*/

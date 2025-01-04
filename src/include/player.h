@@ -3,7 +3,7 @@
 
 #include "include/game.h"
 
-void player_start(Entities *e, V2i position);
+void player_start(Entities *e, V2i position, bool start_with_jump);
 void player_update(Entities *e, f32 dt);
 void player_render(Entities *e);
 

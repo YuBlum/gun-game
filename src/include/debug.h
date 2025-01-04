@@ -16,5 +16,6 @@ void __debug_log(i32 x, bool new_line = true);
 #  define LOG(...)
 #endif
 
+void debug_update(void);
 
 #endif/*_DEBUG_H_*/

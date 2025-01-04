@@ -1,5 +1,7 @@
 #include <windows.h>
 #include "include/debug.h"
+#include "include/window.h"
+#include "include/map.h"
 
 void
 __debug_log(char *str) {
@@ -52,4 +54,11 @@ __debug_log(u32 x, bool new_line) {
 void
 __debug_log(i32 x, bool new_line) {
   __debug_log(i64(x), new_line);
+}
+
+void
+debug_update(void) {
+  if (is_key_down(KEY_DEBUG)) {
+    if (is_key_click(KEY_UP)) reload_map();
+  }
 }

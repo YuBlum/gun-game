@@ -1,6 +1,7 @@
 #include "include/game.h"
 #include "include/renderer.h"
 #include "include/player.h"
+#include "include/debug.h"
 #include "include/map.h"
 
 static Entities g_entities;
@@ -13,9 +14,12 @@ game_start(void) {
 
 void
 game_update(f32 dt) {
-  map_system_update(&g_entities, dt);
-  if (is_changing_map()) return;
+  map_system_update(&g_entities);
+  if (in_map_transition()) return;
   player_update(&g_entities, dt);
+#if DEBUG
+  debug_update();
+#endif
 }
 
 void
