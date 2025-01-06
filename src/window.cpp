@@ -175,3 +175,32 @@ bool
 is_key_click(u8 key) {
   return (g_key_down & key) != 0 && (g_key_prev & key) == 0;
 }
+
+#ifdef DEBUG
+void
+rect_debug(int x, int y, u16 w, u16 h) {
+  int t = y * WINDOW_S;
+  int l = x * WINDOW_S;
+  int b = t + h * WINDOW_S - 1;
+  int r = l + w * WINDOW_S - 1;
+  if (t >= WINDOW_W || b < 0 || l >= WINDOW_H || r < 0) return;
+  for (int ry = t; ry <= b; ry++) {
+    if (ry < 0) continue;
+    if (ry >= WINDOW_W) break;
+    if (l >= 0) g_window->backbuffer.pixels[ry * WINDOW_W + l] = 0xff0000;
+    if (r < WINDOW_W) g_window->backbuffer.pixels[ry * WINDOW_W + r] = 0xff0000;
+    if (ry == t || ry == b) {
+      for (int rx = l + 1; rx <= r; rx++) {
+        if (rx < 0) continue;
+        if (rx >= WINDOW_H) break;
+        g_window->backbuffer.pixels[ry * WINDOW_W + rx] = 0xff0000;
+      }
+    }
+  }
+}
+
+void
+rect_debug(V2i position, u16 w, u16 h) {
+  rect_debug(position.x, position.y, w, h);
+}
+#endif

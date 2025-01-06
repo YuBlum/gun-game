@@ -23,6 +23,8 @@ MapTile get_map_tile(int x, int y);
 i8 get_next_map(SurroundingMap direction);
 bool in_map_transition(void);
 void map_system_update(Entities *e);
+#ifdef DEBUG
 void debug_render_map(void);
+#endif
 
 #endif/*_MAP_H_*/

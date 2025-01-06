@@ -15,5 +15,8 @@ struct Game {
 void game_start(Entities *e);
 void game_update(Entities *e, f32 dt);
 void game_render(Entities *e);
+#ifdef DEBUG
+void game_debug_render(Entities *e);
+#endif
 
 #endif/*_GAME_H_*/

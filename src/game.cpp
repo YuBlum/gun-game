@@ -23,6 +23,14 @@ game_update(Entities *e, f32 dt) {
 void
 game_render(Entities *e) {
   clear(0);
-  debug_render_map();
   player_render(e);
 }
+
+#if DEBUG
+void
+game_debug_render(Entities *e) {
+  if (!show_colliders) return;
+  debug_render_map();
+  debug_render_collider(&e->player.collider);
+}
+#endif

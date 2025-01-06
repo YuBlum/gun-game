@@ -1,9 +1,12 @@
 #include "include/map.h"
 #include "include/core.h"
 #include "include/player.h"
-#include "include/renderer.h"
 #include "include/debug.h"
 #include "include/res/map.h"
+#include "include/renderer.h"
+#ifdef DEBUG
+#  include "include/window.h"
+#endif
 
 static u8 g_map_index;
 static u8 g_map_next_index;
@@ -24,7 +27,7 @@ load_map_internal(Entities *e, u8 map_index) {
   g_map_index = map_index;
   bool found_player = false;
   bool start_with_jump = false;
-  V2i player_pos = e->player.mover.collider.position;
+  V2i player_pos = e->player.collider.position;
   if (e->player.alive && g_map_direction_from_prv != MAP_NONE) {
     switch (g_map_direction_from_prv) {
     case MAP_TOP:    player_pos.y = 0;                                    break;
@@ -127,14 +130,15 @@ map_system_update(Entities *e) {
   }
 }
 
+#ifdef DEBUG
 void
 debug_render_map(void) {
-  if (g_map_index < MAP_AMOUNT)
   for (i32 y = 0; y < MAP_HEIGHT; y++) {
     for (i32 x = 0; x < MAP_WIDTH; x++) {
       if (get_map_tile_unsafe(x, y) == TILE_SOLID) {
-        rect_outline(x * TILE_SIZE, y * TILE_SIZE, TILE_SIZE, TILE_SIZE, 2);
+        rect_debug(x * TILE_SIZE, y * TILE_SIZE, TILE_SIZE, TILE_SIZE);
       }
     }
   }
 }
+#endif

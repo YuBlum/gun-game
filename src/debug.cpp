@@ -3,6 +3,8 @@
 #include "include/window.h"
 #include "include/map.h"
 
+bool show_colliders = true;
+
 void
 __debug_log(char *str) {
   OutputDebugStringA(str);
@@ -60,5 +62,6 @@ void
 debug_update(void) {
   if (is_key_down(KEY_DEBUG)) {
     if (is_key_click(KEY_UP)) reload_map();
+    if (is_key_click(KEY_X)) show_colliders = !show_colliders;
   }
 }

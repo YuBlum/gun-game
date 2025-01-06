@@ -37,5 +37,10 @@ f32 frame_begin(void);
 void frame_end(void);
 bool is_key_down(u8 key);
 bool is_key_click(u8 key);
+#ifdef DEBUG
+#include "include/math.h"
+void rect_debug(int x, int y, u16 w, u16 h);
+void rect_debug(V2i position, u16 w, u16 h);
+#endif
 
 #endif/*_WINDOW_H_*/

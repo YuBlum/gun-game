@@ -3,16 +3,14 @@
 
 #include "include/math.h"
 
-enum ColliderTag {
-  COL_NONE = 0,
-  COL_PLAYER,
-};
-
 struct Collider {
-  ColliderTag tag;
   V2i position;
+  V2i size;
 };
 
 bool aabb_collision(Collider *c0, Collider *c1);
+#if DEBUG
+void debug_render_collider(Collider *c);
+#endif
 
 #endif/*_COLLIDER_H_*/

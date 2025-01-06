@@ -20,6 +20,9 @@ main(void) {
     }
     game_render(&game.entities);
     frame_end();
+#ifdef DEBUG
+    game_debug_render(&game.entities);
+#endif
   }
   ExitProcess(0);
 }
