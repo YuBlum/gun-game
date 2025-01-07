@@ -10,12 +10,10 @@
 
 static u8 g_map_index;
 static u8 g_map_next_index;
-static SurroundingMap g_map_direction_from_prv;
+static Direction g_map_direction_from_prv;
 static bool g_change_map;
 static bool g_in_map_transition;
 static bool g_reloading;
-
-#define MAP_NONE ((SurroundingMap)-1)
 
 static u8
 get_map_tile_unsafe(int x, int y) {
@@ -25,15 +23,16 @@ get_map_tile_unsafe(int x, int y) {
 static void
 load_map_internal(Entities *e, u8 map_index) {
   g_map_index = map_index;
+  e->bullet.amount = 0;
   bool found_player = false;
-  bool start_with_jump = false;
+  bool player_start_with_jump = false;
   V2i player_pos = e->player.collider.position;
-  if (e->player.alive && g_map_direction_from_prv != MAP_NONE) {
+  if (e->player.alive && g_map_direction_from_prv != DIR_NONE) {
     switch (g_map_direction_from_prv) {
-    case MAP_TOP:    player_pos.y = 0;                                    break;
-    case MAP_LEFT:   player_pos.x = 0;                                    break;
-    case MAP_RIGHT:  player_pos.x = CANVAS_H - 8;                         break;
-    case MAP_BOTTOM: player_pos.y = CANVAS_W - 8; start_with_jump = true; break;
+    case DIR_TOP:    player_pos.y = 0;                                                              break;
+    case DIR_LEFT:   player_pos.x = 0;                                                              break;
+    case DIR_RIGHT:  player_pos.x = CANVAS_H - e->player.collider.h;                                break;
+    case DIR_BOTTOM: player_pos.y = CANVAS_W - e->player.collider.w; player_start_with_jump = true; break;
     }
   }
   for (i32 y = 0; y < MAP_HEIGHT; y++) {
@@ -44,12 +43,12 @@ load_map_internal(Entities *e, u8 map_index) {
       {
         if (e->player.alive) break;
         bool change_player = false;
-        if (g_map_direction_from_prv != MAP_NONE) {
+        if (g_map_direction_from_prv != DIR_NONE) {
           switch (g_map_direction_from_prv) {
-          case MAP_TOP:    if (tile_pos.y < player_pos.y) { change_player = true; } break;
-          case MAP_LEFT:   if (tile_pos.x < player_pos.x) { change_player = true; } break;
-          case MAP_BOTTOM: if (tile_pos.y > player_pos.y) { change_player = true; } break;
-          case MAP_RIGHT:  if (tile_pos.x > player_pos.x) { change_player = true; } break;
+          case DIR_TOP:    if (tile_pos.y < player_pos.y) { change_player = true; } break;
+          case DIR_LEFT:   if (tile_pos.x < player_pos.x) { change_player = true; } break;
+          case DIR_BOTTOM: if (tile_pos.y > player_pos.y) { change_player = true; } break;
+          case DIR_RIGHT:  if (tile_pos.x > player_pos.x) { change_player = true; } break;
           }
         }
         if (!found_player || change_player) {
@@ -62,12 +61,12 @@ load_map_internal(Entities *e, u8 map_index) {
       }
     }
   }
-  player_start(e, player_pos, start_with_jump);
+  player_setup(e, player_pos, player_start_with_jump);
 }
 
 void
 map_system_start(Entities *e) {
-  g_map_direction_from_prv = MAP_NONE;
+  g_map_direction_from_prv = DIR_NONE;
   load_map_internal(e, 0);
   g_map_next_index = g_map_index;
   g_change_map = false;
@@ -97,12 +96,13 @@ get_map_tile(int x, int y) {
 }
 
 i8
-get_next_map(SurroundingMap direction) {
+get_next_map(Direction direction) {
   switch (direction) {
-    case MAP_TOP:    g_map_direction_from_prv = MAP_BOTTOM; break;
-    case MAP_LEFT:   g_map_direction_from_prv = MAP_RIGHT;  break;
-    case MAP_BOTTOM: g_map_direction_from_prv = MAP_TOP;    break;
-    case MAP_RIGHT:  g_map_direction_from_prv = MAP_LEFT;   break;
+    case DIR_TOP:    g_map_direction_from_prv = DIR_BOTTOM; break;
+    case DIR_LEFT:   g_map_direction_from_prv = DIR_RIGHT;  break;
+    case DIR_BOTTOM: g_map_direction_from_prv = DIR_TOP;    break;
+    case DIR_RIGHT:  g_map_direction_from_prv = DIR_LEFT;   break;
+    case DIR_NONE:   return -1;
   }
   return g_map_surrounding[g_map_index][direction];
 }

@@ -36,7 +36,7 @@ pixel(V2i position, u8 color) {
 }
 
 void
-rect(int x, int y, u16 w, u16 h, u8 color) {
+rect(int x, int y, int w, int h, u8 color) {
   for (int ry = y; ry < y + h; ry++) {
     for (int rx = x; rx < x + w; rx++) {
       pixel(rx, ry, color);
@@ -45,12 +45,12 @@ rect(int x, int y, u16 w, u16 h, u8 color) {
 }
 
 void
-rect(V2i position, u16 w, u16 h, u8 color) {
+rect(V2i position, int w, int h, u8 color) {
   rect(position.x, position.y, w, h, color);
 }
 
 void
-rect_outline(int x, int y, u16 w, u16 h, u8 color) {
+rect_outline(int x, int y, int w, int h, u8 color) {
   for (int ry = y; ry < y + h; ry++) {
     pixel(x, ry, color);
     pixel(x + w - 1, ry, color);
@@ -63,38 +63,40 @@ rect_outline(int x, int y, u16 w, u16 h, u8 color) {
 }
 
 void
-rect_outline(V2i position, u16 w, u16 h, u8 color) {
+rect_outline(V2i position, int w, int h, u8 color) {
   rect_outline(position.x, position.y, w, h, color);
 }
 
 void
-color_buffer(int x, int y, u16 buffer_w, u16 buffer_h, u8 *buffer, u8 color) {
+color_buffer(int x, int y, int buffer_w, int buffer_h, u8 *buffer, u8 color, bool flip) {
   for (int _y = 0; _y < buffer_h; _y++) {
     for (int _x = 0; _x < buffer_w; _x++) {
-      u8 px = (buffer[_y * (buffer_w >> 3) + (_x >> 3)] >> (_x & 7)) & 1;
+      int __x = flip ? buffer_w - 1 - _x : _x;
+      u8 px = (buffer[_y * (buffer_w >> 3) + (__x >> 3)] >> (__x & 7)) & 1;
       if (px) pixel(_x + x, _y + y, color);
     }
   }
 }
 
 void
-color_buffer(int x, int y, u16 buffer_w, u16 buffer_h, u8 *buffer, u8 color1, u8 color0) {
+color_buffer(int x, int y, int buffer_w, int buffer_h, u8 *buffer, u8 color1, u8 color0, bool flip) {
   for (int _y = 0; _y < buffer_h; _y++) {
     for (int _x = 0; _x < buffer_w; _x++) {
-      u8 px = (buffer[_y * (buffer_w >> 3) + (_x >> 3)] >> (_x & 7)) & 1;
+      int __x = flip ? buffer_w - 1 - _x : _x;
+      u8 px = (buffer[_y * (buffer_w >> 3) + (__x >> 3)] >> (__x & 7)) & 1;
       pixel(_x + x, _y + y, px ? color1 : color0);
     }
   }
 }
 
 void
-color_buffer(V2i position, u16 buffer_w, u16 buffer_h, u8 *buffer, u8 color) {
-  color_buffer(position.x, position.y, buffer_w, buffer_h, buffer, color);
+color_buffer(V2i position, int buffer_w, int buffer_h, u8 *buffer, u8 color, bool flip) {
+  color_buffer(position.x, position.y, buffer_w, buffer_h, buffer, color, flip);
 }
 
 void
-color_buffer(V2i position, u16 buffer_w, u16 buffer_h, u8 *buffer, u8 color1, u8 color0) {
-  color_buffer(position.x, position.y, buffer_w, buffer_h, buffer, color1, color0);
+color_buffer(V2i position, int buffer_w, int buffer_h, u8 *buffer, u8 color1, u8 color0, bool flip) {
+  color_buffer(position.x, position.y, buffer_w, buffer_h, buffer, color1, color0, flip);
 }
 
 void

@@ -3,12 +3,17 @@
 
 #include "include/math.h"
 
+#pragma warning(disable : 4201)
 struct Collider {
-  V2i position;
-  V2i size;
+  union {
+    struct { V2i position, size; };
+    struct { i32 x, y, w, h; };
+  };
 };
 
-bool aabb_collision(Collider *c0, Collider *c1);
+bool collider_on_collider(Collider *c0, Collider *c1);
+Direction collider_outside_of_screen(Collider *c);
+bool is_on_ground(Collider *collider);
 #if DEBUG
 void debug_render_collider(Collider *c);
 #endif

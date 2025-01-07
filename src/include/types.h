@@ -14,4 +14,12 @@ typedef int64_t  i64;
 typedef float    f32;
 typedef double   f64;
 
+enum Direction : i8 {
+  DIR_NONE = -1,
+  DIR_TOP,
+  DIR_LEFT,
+  DIR_BOTTOM,
+  DIR_RIGHT,
+};
+
 #endif/*_TYPES_H_*/

@@ -62,6 +62,6 @@ void
 debug_update(void) {
   if (is_key_down(KEY_DEBUG)) {
     if (is_key_click(KEY_UP)) reload_map();
-    if (is_key_click(KEY_X)) show_colliders = !show_colliders;
+    if (is_key_click(KEY_B)) show_colliders = !show_colliders;
   }
 }

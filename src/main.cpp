@@ -14,7 +14,7 @@ main(void) {
   while (game.window.is_running) {
     f32 dt = frame_begin();
     if (game.window.has_focus) {
-      if (is_key_down(KEY_ESC)) game.window.is_running = false;
+      if (is_key_down(KEY_EXIT)) game.window.is_running = false;
       game_update(&game.entities, dt);
       update_renderer(dt);
     }

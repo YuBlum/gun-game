@@ -23,16 +23,16 @@ void make_renderer(Renderer *renderer);
 void clear(u8 color);
 void pixel(int x, int y, u8 color);
 void pixel(V2i position, u8 color);
-void rect(int x, int y, u16 w, u16 h, u8 color);
-void rect(V2i position, u16 w, u16 h, u8 color);
+void rect(int x, int y, int w, int h, u8 color);
+void rect(V2i position, int w, int h, u8 color);
 #ifdef DEBUG
-void rect_outline(int x, int y, u16 w, u16 h, u8 color);
-void rect_outline(V2i position, u16 w, u16 h, u8 color);
+void rect_outline(int x, int y, int w, int h, u8 color);
+void rect_outline(V2i position, int w, int h, u8 color);
 #endif
-void color_buffer(int x, int y, u16 buffer_w, u16 buffer_h, u8 *buffer, u8 color);
-void color_buffer(V2i position, u16 buffer_w, u16 buffer_h, u8 *buffer, u8 color);
-void color_buffer(int x, int y, u16 buffer_w, u16 buffer_h, u8 *buffer, u8 color1, u8 color0);
-void color_buffer(V2i position, u16 buffer_w, u16 buffer_h, u8 *buffer, u8 color1, u8 color0);
+void color_buffer(int x, int y, int buffer_w, int buffer_h, u8 *buffer, u8 color, bool flip);
+void color_buffer(V2i position, int buffer_w, int buffer_h, u8 *buffer, u8 color, bool flip);
+void color_buffer(int x, int y, int buffer_w, int buffer_h, u8 *buffer, u8 color1, u8 color0, bool flip);
+void color_buffer(V2i position, int buffer_w, int buffer_h, u8 *buffer, u8 color1, u8 color0, bool flip);
 void fade_out(void);
 void fade_in(void);
 bool in_fade(void);

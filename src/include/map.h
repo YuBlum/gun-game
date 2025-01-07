@@ -9,18 +9,11 @@
 
 typedef u8 MapTile;
 
-enum SurroundingMap : u8 {
-  MAP_TOP = 0,
-  MAP_LEFT,
-  MAP_BOTTOM,
-  MAP_RIGHT,
-};
-
 void map_system_start(Entities *e);
 void load_map(u8 map_index);
 void reload_map(void);
 MapTile get_map_tile(int x, int y);
-i8 get_next_map(SurroundingMap direction);
+i8 get_next_map(Direction direction);
 bool in_map_transition(void);
 void map_system_update(Entities *e);
 #ifdef DEBUG

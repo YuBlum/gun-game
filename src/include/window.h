@@ -13,9 +13,9 @@
 #define KEY_DOWN  (1 << 1)
 #define KEY_LEFT  (1 << 2)
 #define KEY_RIGHT (1 << 3)
-#define KEY_Z     (1 << 4)
-#define KEY_X     (1 << 5)
-#define KEY_ESC   (1 << 6)
+#define KEY_A     (1 << 4)
+#define KEY_B     (1 << 5)
+#define KEY_EXIT  (1 << 6)
 #define KEY_DEBUG (1 << 7)
 
 struct Backbuffer {
@@ -39,8 +39,8 @@ bool is_key_down(u8 key);
 bool is_key_click(u8 key);
 #ifdef DEBUG
 #include "include/math.h"
-void rect_debug(int x, int y, u16 w, u16 h);
-void rect_debug(V2i position, u16 w, u16 h);
+void rect_debug(int x, int y, int w, int h);
+void rect_debug(V2i position, int w, int h);
 #endif
 
 #endif/*_WINDOW_H_*/

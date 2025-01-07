@@ -10,9 +10,9 @@ struct Animator {
 };
 
 void update_animator(Animator *animator, u32 frames_amount, u16 *frames_duration, f32 dt);
-void draw_animator(Animator animator, int x, int y, u16 width, u16 height, u8 *pixels, u8 color);
-void draw_animator(Animator animator, int x, int y, u16 width, u16 height, u8 *pixels, u8 color1);
-void draw_animator(Animator animator, V2i position, u16 width, u16 height, u8 *pixels, u8 color);
-void draw_animator(Animator animator, V2i position, u16 width, u16 height, u8 *pixels, u8 color1, u8 color0);
+void draw_animator(Animator animator, int x, int y, int width, int height, u8 *pixels, u8 color, bool flip);
+void draw_animator(Animator animator, int x, int y, int width, int height, u8 *pixels, u8 color1, bool flip);
+void draw_animator(Animator animator, V2i position, int width, int height, u8 *pixels, u8 color, bool flip);
+void draw_animator(Animator animator, V2i position, int width, int height, u8 *pixels, u8 color1, u8 color0, bool flip);
 
 #endif/*_ANIMATOR_H_*/

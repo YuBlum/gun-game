@@ -42,9 +42,9 @@ window_procedure(HWND window_handle, UINT msg, WPARAM wparam, LPARAM lparam) {
     case VK_LEFT:   g_key_down |= KEY_LEFT;  break;
     case VK_DOWN:   g_key_down |= KEY_DOWN;  break;
     case VK_RIGHT:  g_key_down |= KEY_RIGHT; break;
-    case 'Z':       g_key_down |= KEY_Z;     break;
-    case 'X':       g_key_down |= KEY_X;     break;
-    case VK_ESCAPE: g_key_down |= KEY_ESC;   break;
+    case 'Z':       g_key_down |= KEY_A;     break;
+    case 'X':       g_key_down |= KEY_B;     break;
+    case VK_ESCAPE: g_key_down |= KEY_EXIT;  break;
     case VK_F1:     g_key_down |= KEY_DEBUG; break;
     }
     break;
@@ -54,9 +54,9 @@ window_procedure(HWND window_handle, UINT msg, WPARAM wparam, LPARAM lparam) {
     case VK_LEFT:   g_key_down &= ~KEY_LEFT;  break;
     case VK_DOWN:   g_key_down &= ~KEY_DOWN;  break;
     case VK_RIGHT:  g_key_down &= ~KEY_RIGHT; break;
-    case 'Z':       g_key_down &= ~KEY_Z;     break;
-    case 'X':       g_key_down &= ~KEY_X;     break;
-    case VK_ESCAPE: g_key_down &= ~KEY_ESC;   break;
+    case 'Z':       g_key_down &= ~KEY_A;     break;
+    case 'X':       g_key_down &= ~KEY_B;     break;
+    case VK_ESCAPE: g_key_down &= ~KEY_EXIT;  break;
     case VK_F1:     g_key_down &= ~KEY_DEBUG; break;
     }
     break;
@@ -178,7 +178,7 @@ is_key_click(u8 key) {
 
 #ifdef DEBUG
 void
-rect_debug(int x, int y, u16 w, u16 h) {
+rect_debug(int x, int y, int w, int h) {
   int t = y * WINDOW_S;
   int l = x * WINDOW_S;
   int b = t + h * WINDOW_S - 1;
@@ -200,7 +200,7 @@ rect_debug(int x, int y, u16 w, u16 h) {
 }
 
 void
-rect_debug(V2i position, u16 w, u16 h) {
+rect_debug(V2i position, int w, int h) {
   rect_debug(position.x, position.y, w, h);
 }
 #endif
