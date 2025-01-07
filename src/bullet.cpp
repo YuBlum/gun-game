@@ -1,5 +1,6 @@
 #include "include/bullet.h"
 #include "include/core.h"
+#include "include/debug.h"
 #include "include/renderer.h"
 
 void
@@ -25,7 +26,9 @@ bullet_update(Entities *e, f32 dt) {
   /* move bullets */
   for (u32 i = 0; i < b->amount; i++) {
     UpdateMoverResult mover_result = update_mover(&b->mover[i], &b->collider[i], dt, false, false);
-    if (mover_result.collided_x || mover_result.collided_y || collider_outside_of_screen(&b->collider[i]) != DIR_NONE) b->alive[i] = false;
+    if (mover_result.collided_x || mover_result.collided_y || collider_outside_of_screen(&b->collider[i]) != DIR_NONE) {
+      b->alive[i] = false;
+    }
   }
 }
 

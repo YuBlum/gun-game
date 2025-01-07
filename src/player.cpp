@@ -17,8 +17,9 @@
 #define VARIABLE_JUMP_TIMER_MAX    0.15f
 #define JUMP_BUFFER_TIMER_MAX      0.12f
 #define COYOTE_TIMER_MAX           0.06f
-
-#define BULLET_SPEED 200.0f
+#define SHOOT_IMPULSE_VELOCITY     125.0f
+#define RELOAD_TIMER_MAX           1.00f
+#define BULLET_SPEED               200.0f
 
 void
 player_start(Entities *e) {
@@ -82,19 +83,30 @@ player_update(Entities *e, f32 dt) {
   }
   p->mover.weight = p->mover.velocity.y < 0 ? JUMPING_WEIGHT : FALLING_WEIGHT;
   /* shoot */
-  if (is_key_click(KEY_B) && e->bullet.amount < p->bullet_max) {
+  if (p->reload_timer > 0.0f) p->reload_timer -= dt;
+  if (is_key_down(KEY_B) && e->bullet.amount < p->bullet_max && p->reload_timer <= 0.0f) {
     e->bullet.alive[e->bullet.amount] = true;
     e->bullet.mover[e->bullet.amount].remainder = {};
     e->bullet.collider[e->bullet.amount].position = p->collider.position + p->collider.size / 2;
     int input_y = is_key_down(KEY_DOWN) - is_key_down(KEY_UP);
     Direction aim_direction = input_y < 0 ? DIR_TOP : input_y > 0 ? DIR_BOTTOM : p->flip ? DIR_LEFT : DIR_RIGHT;
     switch (aim_direction) {
-    case DIR_TOP:    e->bullet.mover[e->bullet.amount].velocity = { +0.0,          -BULLET_SPEED }; break;
-    case DIR_LEFT:   e->bullet.mover[e->bullet.amount].velocity = { -BULLET_SPEED, +0.0          }; break;
-    case DIR_BOTTOM: e->bullet.mover[e->bullet.amount].velocity = { +0.0,          +BULLET_SPEED }; break;
-    case DIR_RIGHT:  e->bullet.mover[e->bullet.amount].velocity = { +BULLET_SPEED, +0.0          }; break;
+    case DIR_TOP: 
+      e->bullet.mover[e->bullet.amount].velocity = { +0.0, -BULLET_SPEED };
+      break;
+    case DIR_LEFT:
+      e->bullet.mover[e->bullet.amount].velocity = { -BULLET_SPEED, +0.0 };
+      break;
+    case DIR_BOTTOM:
+      e->bullet.mover[e->bullet.amount].velocity = { +0.0, +BULLET_SPEED };
+      p->mover.velocity.y -= SHOOT_IMPULSE_VELOCITY;
+      break;
+    case DIR_RIGHT:
+      e->bullet.mover[e->bullet.amount].velocity = { +BULLET_SPEED, +0.0 };
+      break;
     }
     e->bullet.amount++;
+    if (e->bullet.amount >= p->bullet_max) p->reload_timer = RELOAD_TIMER_MAX;
   }
   /* update components */
   update_animator(&p->animator, SPR_TEST_FRAMES, g_spr_test_frame_duration, dt);
