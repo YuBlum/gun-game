@@ -1,0 +1,45 @@
+#ifndef __SPR_PLAYER.ASEPRITE_DATA_H__
+#define __SPR_PLAYER.ASEPRITE_DATA_H__
+
+#define SPR_PLAYER.ASEPRITE_W       8
+#define SPR_PLAYER.ASEPRITE_H       8
+#define SPR_PLAYER.ASEPRITE_FRAMES  3
+static u16 g_spr_player.aseprite_frame_duration[SPR_PLAYER.ASEPRITE_FRAMES] = {
+  300,
+  50,
+  200,
+};
+static u8 g_spr_player.aseprite_pixels[SPR_PLAYER.ASEPRITE_FRAMES][(SPR_PLAYER.ASEPRITE_W >> 3)*SPR_PLAYER.ASEPRITE_H] = {
+  {
+    0b01111110,
+    0b10111011,
+    0b11000111,
+    0b01111110,
+    0b00000000,
+    0b10111011,
+    0b00000000,
+    0b00101100,
+  },
+  {
+    0b01111110,
+    0b10111011,
+    0b10111011,
+    0b01000110,
+    0b00000000,
+    0b10111011,
+    0b10000011,
+    0b00101100,
+  },
+  {
+    0b00000000,
+    0b01111110,
+    0b11111111,
+    0b10111011,
+    0b01000110,
+    0b00000000,
+    0b10111011,
+    0b00101100,
+  }
+};
+
+#endif/*__SPR_PLAYER.ASEPRITE_DATA_H__*/

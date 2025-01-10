@@ -8,7 +8,6 @@
 void
 game_start(Entities *e) {
   player_start(e);
-  bullet_start(e);
   map_system_start(e);
 }
 
@@ -16,8 +15,8 @@ void
 game_update(Entities *e, f32 dt) {
   map_system_update(e);
   if (in_map_transition()) return;
-  bullet_update(e, dt);
   player_update(e, dt);
+  bullet_update(e, dt);
 #if DEBUG
   debug_update();
 #endif
@@ -26,8 +25,8 @@ game_update(Entities *e, f32 dt) {
 void
 game_render(Entities *e) {
   clear(0);
-  bullet_render(e);
   player_render(e);
+  bullet_render(e);
 }
 
 #if DEBUG

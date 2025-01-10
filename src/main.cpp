@@ -5,7 +5,7 @@
 extern "C" int _fltused = 0;
 
 void __stdcall
-main(void) {
+_main(void) {
   Game game;
   setup_random_seed();
   make_window(&game.window);

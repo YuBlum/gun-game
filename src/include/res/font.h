@@ -1,8 +1,8 @@
 #ifndef __FONT_DATA_H__
 #define __FONT_DATA_H__
 
-#define FONT_WIDTH   8
-#define FONT_HEIGHT  8
+#define FONT_W       8
+#define FONT_H       8
 #define FONT_FRAMES  39
 static u16 g_font_frame_duration[FONT_FRAMES] = {
   100,
@@ -45,7 +45,7 @@ static u16 g_font_frame_duration[FONT_FRAMES] = {
   100,
   100,
 };
-static u8 g_font_pixels[FONT_FRAMES][(FONT_WIDTH >> 3)*FONT_HEIGHT] = {
+static u8 g_font_pixels[FONT_FRAMES][(FONT_W >> 3)*FONT_H] = {
   {
     0b00111110,
     0b01100111,
@@ -237,7 +237,7 @@ static u8 g_font_pixels[FONT_FRAMES][(FONT_WIDTH >> 3)*FONT_HEIGHT] = {
     0b01111111,
   },
   {
-    0b00110000,
+    0b01110000,
     0b01100000,
     0b01100000,
     0b01100000,
@@ -263,8 +263,8 @@ static u8 g_font_pixels[FONT_FRAMES][(FONT_WIDTH >> 3)*FONT_HEIGHT] = {
     0b00000011,
     0b00000011,
     0b00000011,
-    0b01000111,
-    0b00111110,
+    0b01000011,
+    0b01111111,
   },
   {
     0b00100010,

@@ -3,7 +3,6 @@
 
 #include "include/entities.h"
 
-void bullet_start(Entities *e);
 void bullet_update(Entities *e, f32 dt);
 void bullet_render(Entities *e);
 

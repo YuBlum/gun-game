@@ -6,7 +6,7 @@
 bool show_colliders = true;
 
 void
-__debug_log(char *str) {
+__debug_log(const char *str) {
   OutputDebugStringA(str);
 }
 
@@ -25,7 +25,9 @@ __debug_log(u64 x, bool new_line) {
   u32 index = sizeof (buf) / sizeof (buf[0]) - 1;
   buf[index] = '\0';
   if (new_line) buf[--index] = '\n';
-  while (x) {
+  if (x == 0) {
+    buf[--index] = '0';
+  } else while (x) {
     buf[--index] = x % 10 + '0';
     x /= 10;
   }
@@ -40,7 +42,9 @@ __debug_log(i64 x, bool new_line) {
   if (new_line) buf[--index] = '\n';
   bool sign = x < 0;
   x = sign ? -x : x;
-  while (x) {
+  if (x == 0) {
+    buf[--index] = '0';
+  } else while (x) {
     buf[--index] = x % 10 + '0';
     x /= 10;
   }
@@ -56,6 +60,35 @@ __debug_log(u32 x, bool new_line) {
 void
 __debug_log(i32 x, bool new_line) {
   __debug_log(i64(x), new_line);
+}
+
+void
+__debug_log(f64 x, bool new_line) {
+  if (x != x) {
+    __debug_log("nan");
+    if (new_line) __debug_log("\n");
+    return;
+  }
+  u64 float_part = u64((x - i64(x)) * 1000000);
+  __debug_log(i64(x), false);
+  __debug_log(".");
+  if (float_part < 10) {
+    __debug_log("00000");
+  } else if (float_part < 100) {
+    __debug_log("0000");
+  } else if (float_part < 1000) {
+    __debug_log("000");
+  } else if (float_part < 10000) {
+    __debug_log("00");
+  } else if (float_part < 100000) {
+    __debug_log("0");
+  }
+  __debug_log(float_part, new_line);
+}
+
+void
+__debug_log(f32 x, bool new_line) {
+  __debug_log(f64(x), new_line);
 }
 
 void

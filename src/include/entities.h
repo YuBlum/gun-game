@@ -14,17 +14,16 @@ struct Player {
   f32 jump_buffer_timer;
   f32 coyote_timer;
   f32 reload_timer;
-  u8 bullet_max;
+  u8 loop_index;
   bool flip;
   bool alive;
+  Direction aim_direction;
 };
 
-#define BULLET_CAP 6
 struct Bullet {
-  Collider collider[BULLET_CAP];
-  Mover mover[BULLET_CAP];
-  bool alive[BULLET_CAP];
-  u8 amount;
+  Collider collider;
+  Mover mover;
+  bool alive;
 };
 
 struct Entities {

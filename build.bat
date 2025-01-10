@@ -13,5 +13,5 @@ if %DEBUG% == true (
   set DEBUG_SRC=
 )
 pushd bin
-cl %EXTRA_FLAGS% -W4 -WX -GS- -Gs9999999 -Fe:%OUT% %SRCS% %DEBUG_SRC% %LIBS% -link -entry:main -nodefaultlib -subsystem:windows -stack:0x100000,0x100000
+cl %EXTRA_FLAGS% -W4 -WX -GS- -Gs9999999 -std:c++20 -Fe:%OUT% %SRCS% %DEBUG_SRC% %LIBS% -link -entry:_main -nodefaultlib -subsystem:windows -stack:0x100000,0x100000
 popd

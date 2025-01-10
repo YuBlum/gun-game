@@ -23,7 +23,7 @@ get_map_tile_unsafe(int x, int y) {
 static void
 load_map_internal(Entities *e, u8 map_index) {
   g_map_index = map_index;
-  e->bullet.amount = 0;
+  e->bullet.alive = false;
   bool found_player = false;
   bool player_start_with_jump = false;
   V2i player_pos = e->player.collider.position;

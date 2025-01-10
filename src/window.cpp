@@ -8,7 +8,7 @@ static u8 g_key_down;
 static u8 g_key_prev;
 
 static void
-crash(char *err) {
+crash(const char *err) {
   MessageBoxA(0, err, 0, MB_ICONERROR|MB_OK);
   ExitProcess(1);
 }
@@ -45,7 +45,9 @@ window_procedure(HWND window_handle, UINT msg, WPARAM wparam, LPARAM lparam) {
     case 'Z':       g_key_down |= KEY_A;     break;
     case 'X':       g_key_down |= KEY_B;     break;
     case VK_ESCAPE: g_key_down |= KEY_EXIT;  break;
+#ifdef DEBUG
     case VK_F1:     g_key_down |= KEY_DEBUG; break;
+#endif
     }
     break;
   case WM_KEYUP:
@@ -57,7 +59,9 @@ window_procedure(HWND window_handle, UINT msg, WPARAM wparam, LPARAM lparam) {
     case 'Z':       g_key_down &= ~KEY_A;     break;
     case 'X':       g_key_down &= ~KEY_B;     break;
     case VK_ESCAPE: g_key_down &= ~KEY_EXIT;  break;
+#ifdef DEBUG
     case VK_F1:     g_key_down &= ~KEY_DEBUG; break;
+#endif
     }
     break;
   case WM_SETFOCUS:

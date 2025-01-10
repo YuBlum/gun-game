@@ -3,13 +3,16 @@
 
 #include "include/types.h"
 #include "include/math.h"
+#include "include/loop.h"
 
 struct Animator {
   u16 timer;
   u16 frame;
+  bool pingpong;
 };
 
 void update_animator(Animator *animator, u32 frames_amount, u16 *frames_duration, f32 dt);
+void update_animator(Animator *animator, Loop loop, u16 *frames_duration, f32 dt);
 void draw_animator(Animator animator, int x, int y, int width, int height, u8 *pixels, u8 color, bool flip);
 void draw_animator(Animator animator, int x, int y, int width, int height, u8 *pixels, u8 color1, bool flip);
 void draw_animator(Animator animator, V2i position, int width, int height, u8 *pixels, u8 color, bool flip);

@@ -12,8 +12,8 @@ struct Collider {
 };
 
 bool collider_on_collider(Collider *c0, Collider *c1);
-Direction collider_outside_of_screen(Collider *c);
 bool is_on_ground(Collider *collider);
+Direction collider_outside_of_screen(Collider *c);
 #if DEBUG
 void debug_render_collider(Collider *c);
 #endif
