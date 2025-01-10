@@ -1,8 +1,8 @@
 #ifndef __MAP_DATA_H__
 #define __MAP_DATA_H__
 
-#define MAP_WIDTH  16
-#define MAP_HEIGHT 16
+#define MAP_W      16
+#define MAP_H      16
 #define MAP_AMOUNT 4
 static i8 g_map_surrounding[MAP_AMOUNT][4] = {
   { -1, 2, -1, 1, },
@@ -10,7 +10,7 @@ static i8 g_map_surrounding[MAP_AMOUNT][4] = {
   { 3, -1, -1, 0, },
   { -1, -1, 2, -1, },
 };
-static u8 g_map_tiles[MAP_AMOUNT][(MAP_WIDTH >> 1)*MAP_HEIGHT] = {
+static u8 g_map_tiles[MAP_AMOUNT][(MAP_W >> 1)*MAP_H] = {
   {
     0x33,
     0x33,

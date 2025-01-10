@@ -129,11 +129,12 @@ player_update(Entities *e, f32 dt) {
       p->loop_index = SPR_PLAYER_LOOP_IDLE;
       p->animator.frame = g_spr_player_loop[p->loop_index].first_frame;
     }
+    update_animator(&p->animator, g_spr_player_loop[p->loop_index], g_spr_player_frame_duration, dt);
   } else {
     p->animator.timer = 0;
     p->animator.frame = 3;
+    p->loop_index = 255;
   }
-  update_animator(&p->animator, g_spr_player_loop[p->loop_index], g_spr_player_frame_duration, dt);
 }
 
 void

@@ -2,6 +2,8 @@
 #include "include/core.h"
 #include "include/player.h"
 #include "include/debug.h"
+#include "include/math.h"
+#include "include/res/spr_wall.h"
 #include "include/res/map.h"
 #include "include/renderer.h"
 #ifdef DEBUG
@@ -15,9 +17,11 @@ static bool g_change_map;
 static bool g_in_map_transition;
 static bool g_reloading;
 
+static i8 tile_sprite[MAP_W * MAP_H];
+
 static u8
 get_map_tile_unsafe(int x, int y) {
-  return (g_map_tiles[g_map_index][y * (MAP_WIDTH >> 1) + (x >> 1)] >> (4 * (x & 1))) & 0xf;
+  return (g_map_tiles[g_map_index][y * (MAP_W >> 1) + (x >> 1)] >> (4 * (x & 1))) & 0xf;
 }
 
 static void
@@ -35,8 +39,8 @@ load_map_internal(Entities *e, u8 map_index) {
     case DIR_BOTTOM: player_pos.y = CANVAS_W - e->player.collider.w; player_start_with_jump = true; break;
     }
   }
-  for (i32 y = 0; y < MAP_HEIGHT; y++) {
-    for (i32 x = 0; x < MAP_WIDTH; x++) {
+  for (i32 y = 0; y < MAP_H; y++) {
+    for (i32 x = 0; x < MAP_W; x++) {
       V2i tile_pos = {x * TILE_SIZE, y * TILE_SIZE};
       switch (get_map_tile_unsafe(x, y)) {
       case TILE_PLAYER:
@@ -54,6 +58,17 @@ load_map_internal(Entities *e, u8 map_index) {
         if (!found_player || change_player) {
           found_player = true;
           player_pos = tile_pos;
+        }
+      } break;
+      case TILE_SOLID:
+      {
+        auto percent = rand32() % 100;
+        if (percent < 10) {
+          tile_sprite[y * MAP_H + x] = rand32() % 2 + 4;
+        } else if (percent < 40) {
+          tile_sprite[y * MAP_H + x] = rand32() % 3 + 1;
+        } else {
+          tile_sprite[y * MAP_H + x] = 0;
         }
       } break;
       default:
@@ -91,7 +106,7 @@ reload_map(void) {
 
 MapTile
 get_map_tile(int x, int y) {
-  if (x < 0 || x >= MAP_WIDTH || y < 0 || y >= MAP_HEIGHT) return TILE_NONE;
+  if (x < 0 || x >= MAP_W || y < 0 || y >= MAP_H) return TILE_NONE;
   return get_map_tile_unsafe(x, y);
 }
 
@@ -130,11 +145,22 @@ map_system_update(Entities *e) {
   }
 }
 
+void
+render_map(void) {
+  for (i32 y = 0; y < MAP_H; y++) {
+    for (i32 x = 0; x < MAP_W; x++) {
+      if (get_map_tile_unsafe(x, y) == TILE_SOLID) {
+        color_buffer(x << TILE_SHIFT, y << TILE_SHIFT, SPR_WALL_W, SPR_WALL_H, g_spr_wall_pixels[tile_sprite[y * MAP_W + x]], 2, false);
+      }
+    }
+  }
+}
+
 #ifdef DEBUG
 void
 debug_render_map(void) {
-  for (i32 y = 0; y < MAP_HEIGHT; y++) {
-    for (i32 x = 0; x < MAP_WIDTH; x++) {
+  for (i32 y = 0; y < MAP_H; y++) {
+    for (i32 x = 0; x < MAP_W; x++) {
       if (get_map_tile_unsafe(x, y) == TILE_SOLID) {
         rect_debug(x * TILE_SIZE, y * TILE_SIZE, TILE_SIZE, TILE_SIZE);
       }

@@ -25,6 +25,7 @@ game_update(Entities *e, f32 dt) {
 void
 game_render(Entities *e) {
   clear(0);
+  render_map();
   player_render(e);
   bullet_render(e);
 }
