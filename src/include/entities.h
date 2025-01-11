@@ -7,8 +7,8 @@
 #include "include/mover.h"
 
 struct Player {
-  Collider collider;
   Mover mover;
+  Collider collider;
   Animator animator;
   f32 variable_jump_timer;
   f32 jump_buffer_timer;
@@ -18,6 +18,8 @@ struct Player {
   bool flip;
   bool alive;
   Direction aim_direction;
+  u8 hp_max;
+  u8 hp;
 };
 
 struct Bullet {

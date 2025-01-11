@@ -3,7 +3,7 @@
 #include "include/window.h"
 #include "include/map.h"
 
-bool show_colliders = true;
+bool show_colliders = false;
 
 void
 __debug_log(const char *str) {

@@ -24,10 +24,10 @@ is_on_ground(Collider *collider) {
 
 Direction
 collider_outside_of_screen(Collider *c) {
-  if (c->x + c->w > CANVAS_W) return DIR_RIGHT;
-  if (c->x        < 0       ) return DIR_LEFT;
-  if (c->y + c->h > CANVAS_H) return DIR_BOTTOM;
-  if (c->y        < 0       ) return DIR_TOP;
+  if (c->x + c->w > CANVAS_W ) return DIR_RIGHT;
+  if (c->x        < 0        ) return DIR_LEFT;
+  if (c->y + c->h > CANVAS_H ) return DIR_BOTTOM;
+  if (c->y        < TILE_SIZE) return DIR_TOP;
   return DIR_NONE;
 }
 

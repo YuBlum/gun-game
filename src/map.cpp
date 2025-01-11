@@ -17,11 +17,18 @@ static bool g_change_map;
 static bool g_in_map_transition;
 static bool g_reloading;
 
-static i8 tile_sprite[MAP_W * MAP_H];
+static u8 tile_sprite[(MAP_W >> 1) * MAP_H];
 
 static u8
-get_map_tile_unsafe(int x, int y) {
-  return (g_map_tiles[g_map_index][y * (MAP_W >> 1) + (x >> 1)] >> (4 * (x & 1))) & 0xf;
+get_map_buffer_unsafe(int x, int y, u8 *buffer) {
+  return (buffer[y * (MAP_W >> 1) + (x >> 1)] >> (4 * (x & 1))) & 0xf;
+}
+
+static void
+set_map_buffer_unsafe(int x, int y, u8 *buffer, u8 val) {
+  u8 shift = 4 * (x & 1);
+  x >>= 1;
+  buffer[y * (MAP_W >> 1) + x] = (val << shift) | ((0xf0 >> shift) & buffer[y * (MAP_W >> 1) + x]);
 }
 
 static void
@@ -33,7 +40,7 @@ load_map_internal(Entities *e, u8 map_index) {
   V2i player_pos = e->player.collider.position;
   if (e->player.alive && g_map_direction_from_prv != DIR_NONE) {
     switch (g_map_direction_from_prv) {
-    case DIR_TOP:    player_pos.y = 0;                                                              break;
+    case DIR_TOP:    player_pos.y = TILE_SIZE;                                                      break;
     case DIR_LEFT:   player_pos.x = 0;                                                              break;
     case DIR_RIGHT:  player_pos.x = CANVAS_H - e->player.collider.h;                                break;
     case DIR_BOTTOM: player_pos.y = CANVAS_W - e->player.collider.w; player_start_with_jump = true; break;
@@ -41,8 +48,8 @@ load_map_internal(Entities *e, u8 map_index) {
   }
   for (i32 y = 0; y < MAP_H; y++) {
     for (i32 x = 0; x < MAP_W; x++) {
-      V2i tile_pos = {x * TILE_SIZE, y * TILE_SIZE};
-      switch (get_map_tile_unsafe(x, y)) {
+      V2i tile_pos = {x << TILE_SHIFT, (y + 1) << TILE_SHIFT};
+      switch (get_map_buffer_unsafe(x, y, g_map_tiles[g_map_index])) {
       case TILE_PLAYER:
       {
         if (e->player.alive) break;
@@ -63,13 +70,13 @@ load_map_internal(Entities *e, u8 map_index) {
       case TILE_SOLID:
       {
         auto percent = rand32() % 100;
+        u8 val = 0;
         if (percent < 10) {
-          tile_sprite[y * MAP_H + x] = rand32() % 2 + 4;
+          val = rand32() % 2 + 4;
         } else if (percent < 40) {
-          tile_sprite[y * MAP_H + x] = rand32() % 3 + 1;
-        } else {
-          tile_sprite[y * MAP_H + x] = 0;
+          val = rand32() % 3 + 1;
         }
+        set_map_buffer_unsafe(x, y, tile_sprite, val);
       } break;
       default:
         break;
@@ -106,8 +113,9 @@ reload_map(void) {
 
 MapTile
 get_map_tile(int x, int y) {
+  y--;
   if (x < 0 || x >= MAP_W || y < 0 || y >= MAP_H) return TILE_NONE;
-  return get_map_tile_unsafe(x, y);
+  return get_map_buffer_unsafe(x, y, g_map_tiles[g_map_index]);
 }
 
 i8
@@ -149,8 +157,8 @@ void
 render_map(void) {
   for (i32 y = 0; y < MAP_H; y++) {
     for (i32 x = 0; x < MAP_W; x++) {
-      if (get_map_tile_unsafe(x, y) == TILE_SOLID) {
-        color_buffer(x << TILE_SHIFT, y << TILE_SHIFT, SPR_WALL_W, SPR_WALL_H, g_spr_wall_pixels[tile_sprite[y * MAP_W + x]], 2, false);
+      if (get_map_buffer_unsafe(x, y, g_map_tiles[g_map_index]) == TILE_SOLID) {
+        color_buffer(x << TILE_SHIFT, (y + 1) << TILE_SHIFT, SPR_WALL_W, SPR_WALL_H, g_spr_wall_pixels[get_map_buffer_unsafe(x, y, tile_sprite)], 2, false);
       }
     }
   }
@@ -161,8 +169,8 @@ void
 debug_render_map(void) {
   for (i32 y = 0; y < MAP_H; y++) {
     for (i32 x = 0; x < MAP_W; x++) {
-      if (get_map_tile_unsafe(x, y) == TILE_SOLID) {
-        rect_debug(x * TILE_SIZE, y * TILE_SIZE, TILE_SIZE, TILE_SIZE);
+      if (get_map_buffer_unsafe(x, y, g_map_tiles[g_map_index]) == TILE_SOLID) {
+        rect_debug(x << TILE_SHIFT, (y + 1) << TILE_SHIFT, TILE_SIZE, TILE_SIZE);
       }
     }
   }

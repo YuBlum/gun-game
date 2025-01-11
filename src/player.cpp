@@ -6,27 +6,30 @@
 #include "include/debug.h"
 #include "include/res/spr_player.h"
 #include "include/res/spr_gun.h"
+#include "include/res/spr_heart.h"
 
-#define MAX_SPEED                  60.0f
-#define GROUND_ACCELERATION        650.0f
-#define AIR_ACCELERATION           800.0f
-#define FRICTION                   650.0f
-#define START_WITH_JUMP_VELOCITY  -125.0f
-#define JUMP_VELOCITY             -75.0f
-#define JUMPING_WEIGHT             1.50f
-#define FALLING_WEIGHT             1.00f
-#define VARIABLE_JUMP_TIMER_MAX    0.15f
-#define JUMP_BUFFER_TIMER_MAX      0.12f
-#define COYOTE_TIMER_MAX           0.06f
-#define SHOOT_IMPULSE_VELOCITY     100.0f
-#define RELOAD_TIMER_MAX           1.00f
-#define BULLET_SPEED               200.0f
+#define MAX_SPEED                       60.0f
+#define GROUND_ACCELERATION             650.0f
+#define AIR_ACCELERATION                800.0f
+#define FRICTION                        650.0f
+#define START_WITH_JUMP_VELOCITY       -125.0f
+#define JUMP_VELOCITY                  -75.0f
+#define JUMPING_WEIGHT                  1.50f
+#define FALLING_WEIGHT                  1.00f
+#define VARIABLE_JUMP_TIMER_MAX         0.15f
+#define JUMP_BUFFER_TIMER_MAX           0.12f
+#define COYOTE_TIMER_MAX                0.06f
+#define SHOOT_IMPULSE_VELOCITY_ON_JUMP  080.0f
+#define SHOOT_IMPULSE_VELOCITY_ON_FALL  120.0f
+#define RELOAD_TIMER_INC                1.00f
+#define BULLET_SPEED                    200.0f
 
 void
 player_start(Entities *e) {
   Player *p = &e->player;
   *p = {};
   p->collider.size = { TILE_SIZE, TILE_SIZE };
+  p->hp = p->hp_max = 3;
 }
 
 void
@@ -86,7 +89,7 @@ player_update(Entities *e, f32 dt) {
   {
     int input_y = is_key_down(KEY_DOWN) - is_key_down(KEY_UP);
     p->aim_direction = input_y < 0 ? DIR_TOP : input_y > 0 ? DIR_BOTTOM : p->flip ? DIR_LEFT : DIR_RIGHT;
-    if (p->reload_timer > 0.0f) p->reload_timer -= dt;
+    if (p->reload_timer > 0.0f) p->reload_timer -= dt * RELOAD_TIMER_INC;
     if (is_key_down(KEY_B) && !e->bullet.alive && p->reload_timer <= 0.0f) {
       e->bullet.alive = true;
       e->bullet.mover.remainder = {};
@@ -105,7 +108,11 @@ player_update(Entities *e, f32 dt) {
       case DIR_BOTTOM:
         e->bullet.collider.position.y += 8;
         e->bullet.mover.velocity = { +0.0, +BULLET_SPEED };
-        p->mover.velocity.y -= SHOOT_IMPULSE_VELOCITY / p->mover.weight;
+        if (p->mover.velocity.y > 0) {
+          p->mover.velocity.y -= SHOOT_IMPULSE_VELOCITY_ON_FALL;
+        } else {
+          p->mover.velocity.y -= SHOOT_IMPULSE_VELOCITY_ON_JUMP;
+        }
         e->bullet.collider.size = { 1, 2 };
         break;
       case DIR_RIGHT:
@@ -114,7 +121,7 @@ player_update(Entities *e, f32 dt) {
         e->bullet.collider.size = { 2, 1 };
         break;
       }
-      p->reload_timer = RELOAD_TIMER_MAX;
+      p->reload_timer = 1.0f;
     }
   }
   /* animation */
@@ -146,5 +153,18 @@ player_render(Entities *e) {
   case DIR_LEFT:   color_buffer(p->collider.position + V2i{ -8, +0 }, SPR_GUN_W, SPR_GUN_H, g_spr_gun_pixels[0], 3, p->flip); break;
   case DIR_BOTTOM: color_buffer(p->collider.position + V2i{ +0, +8 }, SPR_GUN_W, SPR_GUN_H, g_spr_gun_pixels[2], 3, p->flip); break;
   case DIR_RIGHT:  color_buffer(p->collider.position + V2i{ +8, +0 }, SPR_GUN_W, SPR_GUN_H, g_spr_gun_pixels[0], 3, p->flip); break;
+  }
+}
+
+void
+player_render_hud(Entities *e) {
+  Player *p = &e->player;
+  (void)p;
+  V2i position = {4, 1};
+  V2i reload_size = {20, 6};
+  rect(position, int(reload_size.x * (1.0f - p->reload_timer)), reload_size.y, 3);
+  position.x += reload_size.x + 4;
+  for (u32 i = 0; i < p->hp_max; i++) {
+    color_buffer(position.x + i * SPR_HEART_W, position.y, SPR_HEART_W, SPR_HEART_H, g_spr_heart_pixels[0], 1, false);
   }
 }

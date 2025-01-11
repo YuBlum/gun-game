@@ -28,6 +28,7 @@ game_render(Entities *e) {
   render_map();
   player_render(e);
   bullet_render(e);
+  player_render_hud(e);
 }
 
 #if DEBUG
